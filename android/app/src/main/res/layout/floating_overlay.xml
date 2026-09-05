@@ -2,89 +2,153 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/floating_root"
-    android:layout_width="340dp"
-    android:layout_height="460dp"
-    android:background="@color/surface_dark"
-    android:elevation="12dp"
-    android:orientation="vertical"
-    android:padding="2dp">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_floating_window"
+    android:elevation="16dp"
+    android:orientation="vertical">
 
-    <!-- Floating Window Header Bar (Touch to Drag Window) -->
+    <!-- Header doubles as the drag handle -->
     <LinearLayout
         android:id="@+id/floating_header"
         android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:background="@color/card_dark"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_floating_header"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingHorizontal="8dp">
+        android:paddingStart="12dp"
+        android:paddingEnd="6dp">
+
+        <View
+            android:layout_width="34dp"
+            android:layout_height="5dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/bg_divider_grip" />
 
         <TextView
+            android:id="@+id/tv_floating_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="📱 Floating Window"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/mode_floating_title"
             android:textColor="@color/text_primary"
             android:textSize="12sp"
             android:textStyle="bold" />
 
         <ImageButton
+            android:id="@+id/btn_floating_opacity"
+            style="@style/SplitPad.IconButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:contentDescription="@string/overlay_opacity"
+            android:src="@drawable/ic_stack" />
+
+        <ImageButton
             android:id="@+id/btn_floating_minimize"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:background="?selectableItemBackgroundBorderless"
-            android:contentDescription="Minimize"
-            android:src="@android:drawable/arrow_down_float"
-            app:tint="@color/text_primary" />
+            style="@style/SplitPad.IconButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:contentDescription="@string/action_minimize"
+            android:src="@drawable/ic_minimize" />
 
         <ImageButton
             android:id="@+id/btn_floating_close"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:background="?selectableItemBackgroundBorderless"
-            android:contentDescription="Close"
-            android:src="@android:drawable/ic_menu_close_clear_cancel"
-            app:tint="@color/text_primary" />
+            style="@style/SplitPad.IconButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:contentDescription="@string/action_close"
+            android:src="@drawable/ic_close" />
     </LinearLayout>
 
-    <!-- Floating Navigation Bar -->
+    <!-- Navigation row -->
     <LinearLayout
+        android:id="@+id/floating_navbar"
         android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:background="@color/surface_dark"
+        android:layout_height="42dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingHorizontal="4dp">
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp">
+
+        <ImageButton
+            android:id="@+id/btn_floating_back"
+            style="@style/SplitPad.IconButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:contentDescription="@string/action_back"
+            android:src="@drawable/ic_back" />
+
+        <ImageButton
+            android:id="@+id/btn_floating_reload"
+            style="@style/SplitPad.IconButton"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:contentDescription="@string/action_reload"
+            android:src="@drawable/ic_reload" />
 
         <EditText
             android:id="@+id/et_floating_url"
             android:layout_width="0dp"
-            android:layout_height="28dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp"
             android:layout_weight="1"
-            android:background="@color/bg_dark"
-            android:hint="Search or type web address..."
-            android:imeOptions="actionGo"
+            android:background="@drawable/bg_glass_input"
+            android:hint="@string/overlay_url_hint"
+            android:imeOptions="actionGo|flagNoExtractUi"
+            android:importantForAutofill="no"
             android:inputType="textUri"
-            android:paddingHorizontal="6dp"
+            android:maxLines="1"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:singleLine="true"
             android:textColor="@color/text_primary"
-            android:textColorHint="@color/text_secondary"
+            android:textColorHint="@color/text_tertiary"
             android:textSize="11sp" />
 
         <Button
             android:id="@+id/btn_floating_go"
-            android:layout_width="48dp"
-            android:layout_height="28dp"
-            android:backgroundTint="@color/accent_blue"
-            android:padding="0dp"
-            android:text="Go"
-            android:textColor="@color/bg_dark"
-            android:textSize="10sp" />
+            style="@style/SplitPad.ToolButton.Accent"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:text="@string/go_label"
+            android:textSize="11sp" />
     </LinearLayout>
 
-    <!-- Floating WebView -->
-    <WebView
-        android:id="@+id/webview_floating"
+    <ProgressBar
+        android:id="@+id/pb_floating"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="3dp"
+        android:max="100"
+        android:progressDrawable="@drawable/progress_pane"
+        android:visibility="invisible" />
 
+    <FrameLayout
+        android:id="@+id/floating_body"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <WebView
+            android:id="@+id/webview_floating"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <!-- Corner grip: drag to resize the window -->
+        <ImageView
+            android:id="@+id/floating_resize_handle"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_gravity="bottom|end"
+            android:alpha="0.75"
+            android:contentDescription="@string/overlay_resize"
+            android:padding="8dp"
+            android:src="@drawable/ic_maximize"
+            app:tint="@color/accent" />
+    </FrameLayout>
 </LinearLayout>

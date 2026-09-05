@@ -1,88 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_glass_card_light"
+    android:background="@drawable/bg_glass_panel_strong"
     android:orientation="vertical"
     android:padding="20dp">
 
-    <!-- Header Stage Row -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:layout_marginBottom="12dp">
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/tv_picker_stage_badge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_stage_badge"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="4dp"
-            android:text="STEP 1 OF 2"
-            android:textColor="@color/accent_blue"
-            android:textSize="11sp"
+            android:background="@drawable/bg_badge"
+            android:paddingStart="10dp"
+            android:paddingTop="3dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="3dp"
+            android:text="@string/picker_step_1"
+            android:textColor="@color/accent"
+            android:textSize="10sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tv_picker_title"
+            style="@style/SplitPad.Text.Title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:paddingStart="10dp"
-            android:text="Select App 1 (Main Screen)"
-            android:textColor="@color/text_primary"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:text="@string/picker_title_1" />
+
+        <ImageButton
+            android:id="@+id/btn_picker_back"
+            style="@style/SplitPad.IconButton"
+            android:contentDescription="@string/picker_back"
+            android:src="@drawable/ic_back"
+            android:visibility="gone" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/tv_picker_subtitle"
+        style="@style/SplitPad.Text.Body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Tap App 1 (e.g. Zalo) to select it, then proceed to select App 2:"
-        android:textColor="@color/text_secondary"
-        android:textSize="12sp"
-        android:layout_marginBottom="12dp" />
+        android:layout_marginBottom="14dp"
+        android:text="@string/picker_subtitle_1"
+        android:textSize="12sp" />
 
-    <!-- Custom Website / PWA Button -->
-    <Button
-        android:id="@+id/btn_add_custom_url"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:text="🌐 Enter Custom Website / Downloaded PWA URL..."
-        android:textColor="@color/accent_blue"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="10dp" />
-
-    <!-- Instant Search Field -->
     <EditText
         android:id="@+id/et_app_search"
         android:layout_width="match_parent"
-        android:layout_height="42dp"
-        android:background="@drawable/bg_glass_input_light"
-        android:drawableStart="@android:drawable/ic_menu_search"
-        android:drawablePadding="8dp"
-        android:hint="Search installed apps (e.g. Zalo, Chrome)..."
-        android:imeOptions="actionSearch"
+        android:layout_height="44dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bg_glass_input"
+        android:drawableStart="@drawable/ic_search"
+        android:drawablePadding="10dp"
+        android:drawableTint="@color/text_tertiary"
+        android:hint="@string/picker_search_hint"
+        android:imeOptions="actionSearch|flagNoExtractUi"
+        android:importantForAutofill="no"
         android:inputType="text"
-        android:paddingHorizontal="12dp"
+        android:maxLines="1"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:singleLine="true"
         android:textColor="@color/text_primary"
-        android:textColorHint="@color/text_secondary"
-        android:textSize="13sp"
-        android:layout_marginBottom="14dp" />
+        android:textColorHint="@color/text_tertiary"
+        android:textSize="13sp" />
 
-    <!-- Apps List View -->
-    <ListView
-        android:id="@+id/lv_installed_apps"
+    <Button
+        android:id="@+id/btn_add_custom_url"
+        style="@style/SplitPad.ToolButton"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_marginBottom="12dp"
+        android:drawableStart="@drawable/ic_plus"
+        android:drawablePadding="8dp"
+        android:drawableTint="@color/accent"
+        android:gravity="center_vertical"
+        android:text="@string/picker_custom_url"
+        android:textColor="@color/accent"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_picker_empty"
+        style="@style/SplitPad.Text.Body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp"
+        android:text="@string/picker_no_results"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_installed_apps"
         android:layout_width="match_parent"
         android:layout_height="320dp"
-        android:divider="@color/divider_color"
-        android:dividerHeight="1dp"
+        android:clipToPadding="false"
         android:scrollbars="vertical" />
-
 </LinearLayout>

@@ -1,30 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- iOS Light Glassmorphism Palette -->
-    <color name="ios_bg_light">#EAEFFF</color>
-    <color name="bg_light">#EAEFFF</color>
-    <color name="surface_light">#F8F9FD</color>
-    <color name="card_light">#FFFFFF</color>
-    <color name="glass_card_bg">#F2F5FF</color>
-    
-    <color name="bg_dark">#0B0E14</color>
-    <color name="surface_dark">#1C1C1E</color>
-    <color name="card_dark">#2C2C2E</color>
+    <!--
+      Light palette. Every colour here has a matching entry in values-night/colors.xml,
+      so the whole UI follows the device (system) light/dark setting automatically.
+      On Android 12+ the accent colours are replaced at runtime by Material You
+      wallpaper colours (see DynamicColors in MainActivity).
+    -->
 
-    <color name="accent_blue">#007AFF</color>
-    <color name="accent_indigo">#5856D6</color>
-    <color name="accent_purple">#AF52DE</color>
-    <color name="accent_pink">#FF2D55</color>
-    <color name="accent_cyan">#32ADE6</color>
+    <!-- Ambient background: a soft mesh gradient the glass panels sit on top of -->
+    <color name="bg_base">#EEF1FB</color>
+    <color name="bg_mesh_1">#4D7AA8FF</color>
+    <color name="bg_mesh_2">#40C9A7FF</color>
+    <color name="bg_mesh_3">#3D6FE0D8</color>
 
-    <color name="text_primary">#1C1C1E</color>
-    <color name="text_secondary">#636366</color>
-    <color name="text_light_primary">#FFFFFF</color>
-    
-    <color name="divider_color">#D1D1D6</color>
-    <color name="divider_active">#007AFF</color>
-    <color name="border_color">#E5E5EA</color>
-    <color name="accent_blue_alpha">#33007AFF</color>
+    <!-- Frosted glass surfaces -->
+    <color name="glass_surface">#C4FFFFFF</color>
+    <color name="glass_surface_strong">#E6FFFFFF</color>
+    <color name="glass_surface_soft">#8AFFFFFF</color>
+    <color name="glass_stroke">#B3FFFFFF</color>
+    <color name="glass_stroke_soft">#33334466</color>
+    <color name="glass_shadow">#26102A5C</color>
+    <color name="scrim">#66101828</color>
 
-    <color name="ic_launcher_background">#007AFF</color>
+    <!-- Text -->
+    <color name="text_primary">#111827</color>
+    <color name="text_secondary">#5B6478</color>
+    <color name="text_tertiary">#8A92A6</color>
+    <color name="text_on_accent">#FFFFFF</color>
+
+    <!-- Accents (overridden by Material You on Android 12+) -->
+    <color name="accent">#2F6BFF</color>
+    <color name="accent_pressed">#1F51D6</color>
+    <color name="accent_soft">#242F6BFF</color>
+    <color name="accent_secondary">#7C5CFF</color>
+    <color name="pane_a">#2F6BFF</color>
+    <color name="pane_b">#00A6A6</color>
+    <color name="danger">#E5484D</color>
+
+    <!-- Dividers / borders -->
+    <color name="divider_track">#59FFFFFF</color>
+    <color name="divider_grip">#802F6BFF</color>
+    <color name="divider_grip_active">#FF2F6BFF</color>
+    <color name="border_subtle">#1F334466</color>
+
+    <color name="ic_launcher_background">#2F6BFF</color>
 </resources>

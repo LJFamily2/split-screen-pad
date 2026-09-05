@@ -1,0 +1,14 @@
+{
+  "name": "split-screen-pad",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Split-screen and floating-window multitasking for Android tablets, plus a browser simulator.",
+  "scripts": {
+    "test": "node tests/simulator.test.js",
+    "verify:android": "python3 tools/verify_android.py",
+    "serve": "python3 -m http.server 8080"
+  },
+  "devDependencies": {
+    "playwright": "^1.48.0"
+  }
+}

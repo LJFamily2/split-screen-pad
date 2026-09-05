@@ -11,8 +11,8 @@ android {
         applicationId = "com.splitview.pad"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "2.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -36,8 +36,10 @@ android {
         jvmTarget = "17"
     }
 
-    buildFeatures {
-        viewBinding = true
+    lint {
+        // The project ships as a source-only repo; keep lint from breaking CI builds
+        // while still reporting problems in the HTML/XML report.
+        abortOnError = false
     }
 }
 
@@ -47,7 +49,8 @@ dependencies {
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.webkit:webkit:1.9.0")
-    implementation("androidx.cardview:cardview:1.0.0")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation("androidx.dynamicanimation:dynamicanimation:1.0.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

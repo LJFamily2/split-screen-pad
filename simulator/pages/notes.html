@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="data:,">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f6f8ff; --card: rgba(255,255,255,0.72); --stroke: rgba(40,60,110,0.12);
+      --text: #111827; --text-2: #5b6478; --accent: #2f6bff;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #0c1020; --card: rgba(26,32,53,0.7); --stroke: rgba(255,255,255,0.1);
+              --text: #f2f4fa; --text-2: #a8b0c4; --accent: #7fa6ff; }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font: 14px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg); color: var(--text); padding: 18px;
+    }
+    .card {
+      background: var(--card); border: 1px solid var(--stroke);
+      border-radius: 16px; padding: 16px; margin-bottom: 12px;
+      backdrop-filter: blur(14px);
+    }
+    h1 { font-size: 17px; margin-bottom: 4px; }
+    h2 { font-size: 13px; color: var(--text-2); font-weight: 500; margin-bottom: 12px; }
+    p { color: var(--text-2); margin-bottom: 10px; }
+    .accent { color: var(--accent); font-weight: 600; }
+  </style>
+  <title>Notes</title>
+  <style>
+    textarea { width: 100%; min-height: 180px; resize: vertical; border: 1px solid var(--stroke);
+               border-radius: 12px; padding: 12px; font: inherit; background: transparent; color: var(--text); }
+    textarea:focus { outline: none; border-color: var(--accent); }
+    ul { padding-left: 18px; color: var(--text-2); }
+    li { margin-bottom: 6px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Scratch pad</h1>
+    <h2>Type here while the other pane keeps playing</h2>
+    <textarea placeholder="Notes…" aria-label="Notes"></textarea>
+  </div>
+  <div class="card">
+    <h1>Try the gestures</h1>
+    <ul>
+      <li><span class="accent">Drag</span> the divider to resize</li>
+      <li><span class="accent">Double-tap</span> the divider to swap the panes</li>
+      <li><span class="accent">Tap</span> the divider for split options</li>
+      <li><span class="accent">Drag to the edge</span> to make one pane full screen</li>
+    </ul>
+  </div>
+</body>
+</html>

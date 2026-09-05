@@ -1,144 +1,179 @@
-# 📱 Split Screen Pad - Giải Pháp Chia Đôi Màn Hình & Cửa Sổ Nổi Cho Xiaomi Redmi Pad SE 8.7
+# 📱 Split Screen Pad — Chia Đôi Màn Hình & Cửa Sổ Nổi Cho Xiaomi Redmi Pad SE 8.7
 
 ![Android 14](https://img.shields.io/badge/Android-14%20%2F%20HyperOS-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 ![Platform](https://img.shields.io/badge/Target-Xiaomi%20Redmi%20Pad%20SE%208.7-FF6900?style=for-the-badge&logo=xiaomi&logoColor=white)
-![Language](https://img.shields.io/badge/Language-Kotlin%20%2F%20HTML5-007ACC?style=for-the-badge)
+![Language](https://img.shields.io/badge/Kotlin%20%2F%20HTML5-007ACC?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
 
-> 🚀 **Bộ công cụ đa nhiệm (Multitasking Suite) tối ưu chuyên biệt cho Xiaomi Redmi Pad SE 8.7 (Android 14 / MIUI / HyperOS)**  
-> *Giải quyết triệt để lỗi không chia đôi được màn hình, không mở được 2 trang web/ứng dụng song song, bị dừng video/nhạc background và thiếu tính năng Cửa sổ nổi (Floating Browser Overlay).*
+> 🚀 **Bộ công cụ đa nhiệm (multitasking) cho máy tính bảng Android — tối ưu cho Xiaomi Redmi Pad SE 8.7 (Android 14 / HyperOS).**
+> Gom những tính năng chia đôi màn hình tốt nhất của One UI (Samsung), HyperOS (Xiaomi) và iPadOS vào một app duy nhất.
 
 ---
 
-## 🔍 Tổng Quan & Từ Khóa Tìm Kiếm (SEO Summary)
+## 🔍 Tổng Quan (SEO Summary)
 
-Nếu bạn đang tìm kiếm giải pháp cho các vấn đề:
-- **Cách chia đôi màn hình Xiaomi Redmi Pad SE 8.7** khi ứng dụng hệ thống không hỗ trợ.
-- **Sửa lỗi tính năng Split Screen bị ẩn hoặc giới hạn trên HyperOS / MIUI 14**.
-- **Chạy 2 web/app song song trên Android tablet** không bị ngắt nhạc hay dừng video YouTube background.
-- **Mở Cửa sổ Nổi (Floating Window Overlay)** đè lên mọi ứng dụng Android Native khác.
-- **Quản lý Cặp ứng dụng (App Pairs Manager)** mở 2 app cùng lúc chỉ với 1 thao tác chạm.
+Nếu bạn đang tìm:
 
-**Split Screen Pad** chính là giải pháp mã nguồn mở hoàn hảo bao gồm cả **Ứng dụng Native Android (Kotlin APK)** và **Trình Giả Lập Web Trực Quan (Web Simulator)**.
+- **Cách chia đôi màn hình Xiaomi Redmi Pad SE 8.7** khi app hệ thống không hỗ trợ.
+- **Sửa lỗi Split Screen bị ẩn hoặc giới hạn trên HyperOS / MIUI 14**.
+- **Chạy 2 web/app song song trên Android tablet** mà không bị ngắt nhạc hay dừng video.
+- **Cửa sổ nổi (Floating Window Overlay)** đè lên mọi ứng dụng khác.
+- **Quản lý cặp ứng dụng (App Pairs)** để mở 2 app cùng lúc chỉ với 1 chạm.
 
----
+**Split Screen Pad** gồm hai phần: **ứng dụng Android (Kotlin)** và **trình giả lập web (Web Simulator)** để xem trước giao diện ngay trên trình duyệt.
 
-## 🎯 Vấn Đề Ứng Dụng Giải Quyết (Problem & Solution)
-
-### ❌ Các Hạn Chế Đa Nhiệm Mặc Định Trên Xiaomi Redmi Pad SE 8.7:
-1. **Không hỗ trợ Split Screen mặc định**: Nhiều ứng dụng Android hoặc trang web không cho phép chia đôi màn hình qua giao diện mặc định của MIUI / HyperOS.
-2. **Thanh kéo chia tỷ lệ cứng nhắc**: Không cho phép điều chỉnh tỷ lệ hiển thị tự do (30/70, 50/50, 70/30) và không hiển thị con số % trực quan.
-3. **Bị tạm dừng âm thanh/video (Pause Media)**: Khi thao tác ở màn hình bên này, video YouTube hoặc nhạc ở màn hình bên kia tự động bị pause.
-4. **Không đổi được User-Agent độc lập**: Không thể xem một bên giao diện Máy tính (Desktop View) và một bên giao diện Điện thoại (Mobile View).
-5. **Thiếu Cửa sổ Nổi Over-App**: Không thể vừa chơi game hoặc đọc sách vừa bật một cửa sổ duyệt web nổi đè lên trên (`SYSTEM_ALERT_WINDOW`) để tra cứu.
-
-### 💡 Giải Pháp Triệt Để Từ "Split Screen Pad":
-- ✅ **Dual WebViews Độc Lập**: Duyệt mọi trang web, web app song song mượt mà trên màn hình 8.7 inch.
-- ✅ **Thanh Kéo Tỷ Lệ % Thời Gian Thực**: Kéo thả phân chia 30/70 - 50/50 - 70/30 có tooltip chỉ số % trực quan.
-- ✅ **Chế Độ Cửa Sổ Nổi Floating Overlay (`SYSTEM_ALERT_WINDOW`)**: Hiển thị trình duyệt nổi đè lên **BẤT KỲ** ứng dụng Android native nào khác trên máy.
-- ✅ **Phát Đa Truyền Thông Liên Tục (Continuous Playback)**: Nghe nhạc, xem video background không bao giờ bị ngắt khi chuyển tab/gõ phím.
-- ✅ **Quản Lý Cặp Ứng Dụng (App Pair Manager)**: Lưu các bộ cặp ứng dụng yêu thích (YouTube + Google, ChatGPT + Wikipedia, Docs + Dictionary) để mở lại nhanh 1-chạm.
-- ✅ **Tùy Chỉnh User-Agent & Phóng To (Viewport Scale)**: Đổi linh hoạt giữa Desktop View và Mobile View độc lập cho từng khung hình.
+👉 **Dùng thử simulator:** mở `simulator/index.html` hoặc chạy `npm run serve` rồi vào `http://localhost:8080`.
 
 ---
 
-## ⚡ Các Tính Năng Nổi Bật (Key Features)
+## ⚡ Tính Năng
 
-| Tính Năng | Mô Tả Chi Tiết |
+### Chia đôi màn hình (Split view)
+
+| Thao tác | Mô tả |
 | :--- | :--- |
-| 📱 **Dual-Pane Split View** | Hỗ trợ chia đôi màn hình Dọc (Portrait - Top/Bottom) và Ngang (Landscape - Side-by-Side). |
-| 🔲 **Android 14 Floating Overlay** | Mở cửa sổ nổi đè lên game, ứng dụng đọc sách, ghi chú với đầy đủ điều khiển thu nhỏ/phóng to. |
-| ⭐ **App Pair Manager** | Tạo, lưu trữ, chỉnh sửa và xóa danh sách các Cặp Ứng Dụng truy cập nhanh. |
-| 🚀 **Native App Launcher Picker** | Trình chọn ứng dụng native có hiển thị icon biểu tượng app đã cài trên máy. |
-| 🎵 **Continuous Background Media** | Giữ video/audio chạy liên tục khi tương tác giữa các cửa sổ. |
-| ↻ **Smart Back Navigation** | Nút Reload độc lập từng khung và tích hợp bộ xử lý nút Back thông minh `OnBackPressedDispatcher`. |
+| **Kéo thanh chia** | Đổi tỷ lệ tự do, hiện % thời gian thực (VD `65 : 35`) |
+| **Kéo ra sát mép** | Đưa một khung thành **toàn màn hình** (như One UI) |
+| **Chạm 2 lần vào thanh chia** | **Hoán đổi** hai khung ngay lập tức |
+| **Chạm 1 lần vào thanh chia** | Mở **menu Split options** (swap · 50:50 · toàn màn hình · xoay · thả sang cửa sổ nổi · lưu cặp) |
+| **Giữ lâu thanh chia** | Về lại tỷ lệ đều 50:50 |
+| **Nút 1/3 · 1/2 · 2/3** | Tỷ lệ nhanh (snap ratio) |
+| **Nút Rotate** | Đổi giữa **trên/dưới** (portrait) và **trái/phải** (landscape) |
+
+### Từng khung (per-pane)
+
+- Thanh địa chỉ riêng, gõ **tên miền → mở web**, gõ **từ khoá → tự tìm Google**.
+- **Back / Forward / Reload** riêng cho mỗi khung, có thanh tiến trình.
+- **Desktop / Mobile** riêng từng khung — một bên xem giao diện máy tính, một bên giao diện điện thoại.
+- Menu `⋮`: toàn màn hình · mở ra cửa sổ nổi · gửi sang khung kia · copy link · chia sẻ · mở bằng trình duyệt hệ thống.
+- **Video toàn màn hình** (YouTube fullscreen) hoạt động trong khung.
+- **Nhạc / video không bị dừng** khi bạn thao tác ở khung còn lại.
+
+### Cửa sổ nổi (Floating window / Pop-up view)
+
+- Kéo thanh tiêu đề để di chuyển, **tự hít vào mép màn hình** (snap to edge).
+- **Kéo góc dưới để đổi kích thước**.
+- **Thu nhỏ thành bong bóng** (bubble), chạm để mở lại.
+- **Đổi độ trong suốt** (4 mức) để nhìn xuyên qua app bên dưới.
+- Vị trí, kích thước, độ trong suốt và địa chỉ **được nhớ lại sau khi khởi động lại**.
+
+### Cặp ứng dụng (App Pairs)
+
+- Lưu cặp đang mở với tên tuỳ ý, đổi tên, xoá.
+- Danh sách cặp hiện ngay trên **màn hình chính**, chạm 1 lần là mở lại cả hai.
+
+### Chọn 2 app (2-step picker)
+
+- Bước 1 chọn app cho khung 1, bước 2 chọn app cho khung 2, có **ô tìm kiếm tức thì**.
+- Liệt kê **app đã cài trên máy** (kèm icon thật) và các **web app** phổ biến (Zalo, YouTube, ChatGPT, Docs…).
+- Thêm được **URL / PWA tuỳ ý**.
+
+### Ghi nhớ & giao diện
+
+- **Nhớ phiên làm việc**: hai địa chỉ, tỷ lệ chia, hướng chia, chế độ Desktop/Mobile.
+- **Theo theme của máy**: sáng/tối tự động, và trên Android 12+ dùng **Material You** lấy màu nhấn từ hình nền.
+- Thiết kế **Glassmorphism**: bề mặt kính mờ, viền sáng, nền mesh gradient — tương phản chữ đủ cao để đọc thoải mái ở cả hai chế độ.
+- **Phím tắt** (khi gắn bàn phím): `Ctrl+1/2` chọn khung · `Ctrl+E` hoán đổi · `Ctrl+R` tải lại · `Ctrl+D` xoay · `Ctrl+M` toàn màn hình.
 
 ---
 
-## 🛠️ Hướng Dẫn Biên Dịch & Cài Đặt File APK Android (`/android/`)
+## 🛠️ Biên Dịch APK (`/android/`)
 
-### Yêu cầu hệ thống:
-- **Android Studio** (Hedgehog, Iguana, Jellyfish trở lên) hoặc **JDK 17** + Android SDK 34.
-- Thiết bị thử nghiệm: **Xiaomi Redmi Pad SE 8.7** (hoặc bất kỳ máy tính bảng Android 14 / HyperOS nào).
+Yêu cầu: **JDK 17** + **Android SDK 34** (hoặc Android Studio Hedgehog trở lên).
 
-### Các bước Build APK:
-1. Mở Terminal / PowerShell và chuyển vào thư mục `android`:
-   ```bash
-   cd android
-   ```
-2. Chạy lệnh biên dịch APK Debug:
-   - **Windows (PowerShell / CMD)**:
-     ```powershell
-     .\gradlew.bat assembleDebug
-     ```
-   - **Linux / macOS**:
-     ```bash
-     chmod +x gradlew
-     ./gradlew assembleDebug
-     ```
-3. Đồ án sau khi biên dịch nằm tại:
-   ```
-   android/app/build/outputs/apk/debug/app-debug.apk
-   ```
-4. Copy `app-debug.apk` vào máy tính bảng Redmi Pad SE 8.7 và tiến hành cài đặt.
-
----
-
-## ⚙️ Hướng Dẫn Cấp Quyền Cửa Sổ Nổi (Overlay Permission) Trên HyperOS / MIUI
-
-Để bật tính năng **Cửa sổ Nổi (Floating Window Overlay)** đè lên các app khác:
-
-1. Mở app **Split Screen Pad** trên tablet.
-2. Nhấn nút **🔲 Overlay Mode** trên thanh công cụ top bar.
-3. Nhấn **Cấp quyền (Grant Permission)**.
-4. Màn hình Cài đặt Android tự động chuyển tới **Hiển thị trên các ứng dụng khác (Display over other apps)**.
-5. Tìm **Split Screen Pad** và chuyển công tắc sang **BẬT (ON)**.
-
----
-
-## 🌐 Hướng Dẫn Trải Nghiệm Trình Giả Lập Web (`/simulator/`)
-
-Trải nghiệm trước giao diện giả lập đa nhiệm Redmi Pad SE 8.7 trực tiếp trên trình duyệt máy tính:
-
-1. Mở file `index.html` hoặc `simulator/index.html` bằng trình duyệt web (Chrome, Edge, Firefox).
-2. Hoặc khởi chạy local dev server:
-   ```bash
-   npx http-server . -p 8080
-   ```
-3. Truy cập: `http://localhost:8080` trên trình duyệt.
-
----
-
-## 📁 Cấu Trúc Mã Nguồn Dự Án
-
-```
-Resize application/
-├── android/                   # Mã nguồn ứng dụng Native Android (Kotlin)
-│   ├── app/src/main/
-│   │   ├── java/              # Activity, Service (Floating Overlay), AppPair, WebView Managers
-│   │   ├── res/               # Layout XML, Drawable glassmorphism, Values
-│   │   └── AndroidManifest.xml # Khai báo quyền SYSTEM_ALERT_WINDOW & cấu hình app
-│   └── gradlew.bat            # Script biên dịch Gradle trên Windows
-├── simulator/                 # Mã nguồn Web Simulator (HTML5 / CSS3 / JavaScript)
-│   ├── index.html             # Khung hiển thị mô phỏng Redmi Pad SE 8.7
-│   ├── style.css              # Giao diện Glassmorphism & Responsive layout
-│   └── simulator.js           # Logic kéo chia màn hình & cửa sổ nổi trên web
-├── index.html                 # Trang điều hướng nhanh vào Simulator
-├── README.md                  # Tài liệu hướng dẫn chuẩn SEO (Tiếng Việt)
-└── .gitignore                 # Cấu hình loại bỏ file build tạm thời
+```bash
+cd android
+chmod +x gradlew          # Linux / macOS
+./gradlew assembleDebug   # Windows: .\gradlew.bat assembleDebug
 ```
 
+File APK: `android/app/build/outputs/apk/debug/app-debug.apk` — copy sang máy tính bảng và cài đặt.
+
+Chạy kiểm thử:
+
+```bash
+cd android && ./gradlew testDebugUnitTest    # unit test
+python3 tools/verify_android.py              # kiểm tra tài nguyên & ID layout
+```
+
+> GitHub Actions (`.github/workflows/ci.yml`) tự build APK, chạy unit test và lint trên mỗi lần push.
+
 ---
 
-## 🏷️ Keywords & Search Tags (SEO Indexing)
+## ⚙️ Cấp Quyền Cửa Sổ Nổi (HyperOS / MIUI)
 
-`Xiaomi Redmi Pad SE 8.7` `Split Screen Android 14` `HyperOS Multitasking` `MIUI Split Screen Fix` `Chia đôi màn hình Xiaomi` `Cửa sổ nổi HyperOS` `Floating Browser Overlay` `Dual WebView Android App` `App Pair Manager Tablet` `Chạy 2 ứng dụng cùng lúc Redmi Pad` `Continuous Media Playback Android` `Desktop View User-Agent Switcher` `Tablet Multi-window Simulator`
+1. Mở app, chọn **Floating window** (hoặc nút **⧉ Float** trên thanh công cụ).
+2. Chạm **Open settings** → Android mở thẳng mục **Hiển thị trên các ứng dụng khác**.
+3. Tìm **Split Screen Pad** và **BẬT**.
 
 ---
 
-## 🤝 Đóng Góp & Giấy Phép (License)
+## 🌐 Trình Giả Lập Web (`/simulator/`)
 
-Dự án phát triển theo hình thức mã nguồn mở. Mọi ý kiến đóng góp, pull request hoặc báo lỗi đều rất được hoan nghênh.
+```bash
+npm run serve      # rồi mở http://localhost:8080
+```
 
-- **License**: [MIT License](LICENSE)
+Simulator mô phỏng đầy đủ thao tác của app: kéo thanh chia (hỗ trợ **cả chuột và cảm ứng**), tỷ lệ nhanh, hoán đổi, xoay, toàn màn hình, cửa sổ nổi, cặp ứng dụng, dock cạnh màn hình và chuyển theme sáng/tối.
+
+Chạy kiểm thử trình duyệt (Playwright + Chromium):
+
+```bash
+npm install
+npm test
+```
+
+> ⚠️ **Lưu ý về iframe:** trình duyệt chặn nhúng các trang như Google, YouTube, Facebook (`X-Frame-Options`). Simulator sẽ hiện thông báo giải thích thay vì khung trắng. Trong app Android, các trang này chạy trong **WebView thật** nên không bị giới hạn đó. Các **trang demo** kèm sẵn (`simulator/pages/`) luôn hiển thị được để bạn thử toàn bộ thao tác chia màn hình.
+
+---
+
+## 📁 Cấu Trúc Dự Án
+
+```
+split-screen-pad/
+├── android/                        # Ứng dụng Android (Kotlin)
+│   └── app/src/main/
+│       ├── java/com/splitview/pad/
+│       │   ├── MainActivity.kt            # Màn hình chính + workspace chia đôi
+│       │   ├── SplitLayoutController.kt   # Tỷ lệ, hướng chia, cử chỉ thanh chia
+│       │   ├── WebPane.kt                 # Một khung web: điều hướng, UA, fullscreen
+│       │   ├── FloatingOverlayService.kt  # Cửa sổ nổi (kéo/resize/bubble/opacity)
+│       │   ├── AppPickerDialog.kt         # Bộ chọn 2 bước
+│       │   ├── AppCatalog.kt              # Danh sách app + web tương đương
+│       │   ├── NativeSplitLauncher.kt     # Mở 2 app hệ thống cạnh nhau
+│       │   ├── AppPair.kt / Prefs.kt      # Cặp ứng dụng & ghi nhớ phiên
+│       │   └── UrlUtils.kt                # Xử lý địa chỉ / tìm kiếm
+│       └── res/                    # Layout, drawable kính mờ, values + values-night
+├── simulator/                      # Trình giả lập web
+│   ├── index.html · style.css · simulator.js
+│   └── pages/                      # Trang demo nhúng được
+├── tests/simulator.test.js         # Kiểm thử trình duyệt (Playwright)
+├── tools/verify_android.py         # Kiểm tra tài nguyên Android tĩnh
+└── .github/workflows/ci.yml        # Build APK + test tự động
+```
+
+---
+
+## ⚠️ Giới Hạn Thật Sự Của Android (nói rõ để không hiểu nhầm)
+
+Android **chỉ cho phép** một app mở app khác cạnh mình (`FLAG_ACTIVITY_LAUNCH_ADJACENT`) khi app đó **đã ở trong chế độ chia đôi màn hình**. Không có API công khai nào ép hệ thống chuyển từ toàn màn hình sang split.
+
+Vì vậy khi bạn chọn **2 app đã cài**:
+
+- Nếu Split Pad đang ở chế độ chia đôi → mở thẳng app thứ hai sang nửa còn lại.
+- Nếu không → app sẽ hỏi bạn chọn: **mở lần lượt cả hai app** (rồi kéo từ Recents sang nửa còn lại), hoặc **dùng bản web** của hai app đó, hiển thị song song ngay trong Split Pad.
+
+Hai khung web bên trong Split Pad thì **luôn** chia đôi được, không phụ thuộc hệ thống.
+
+---
+
+## 🏷️ Keywords
+
+`Xiaomi Redmi Pad SE 8.7` `Split Screen Android 14` `HyperOS Multitasking` `MIUI Split Screen Fix` `Chia đôi màn hình Xiaomi` `Cửa sổ nổi HyperOS` `Floating Browser Overlay` `Dual WebView Android App` `App Pair Manager Tablet` `Chạy 2 ứng dụng cùng lúc Redmi Pad` `Continuous Background Media` `Desktop View User-Agent Switcher` `Material You Glassmorphism`
+
+---
+
+## 🤝 Đóng Góp & Giấy Phép
+
+- **License**: MIT
 - **Developer / Maintainer**: SwangLee / LJFamily2

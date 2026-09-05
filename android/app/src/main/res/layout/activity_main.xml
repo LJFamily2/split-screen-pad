@@ -4,464 +4,648 @@
     android:id="@+id/main_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_light">
+    android:fitsSystemWindows="true">
 
-    <!-- SPLIT CONTENT VIEW (HIDDEN BY DEFAULT) -->
+    <!-- ============================================================
+         SPLIT WORKSPACE (shown once a mode is picked on the home screen)
+         ============================================================ -->
     <LinearLayout
         android:id="@+id/split_content_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:padding="8dp"
         android:visibility="gone">
 
-        <!-- Commercial Top Action Toolbar -->
+        <!-- Frosted glass command bar -->
         <LinearLayout
-        android:id="@+id/top_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="54dp"
-        android:background="@color/surface_light"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="10dp">
+            android:id="@+id/top_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:background="@drawable/bg_glass_bar"
+            android:elevation="6dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="⚡ Split Pad Pro"
-            android:textColor="@color/accent_blue"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:paddingEnd="12dp" />
+            <ImageButton
+                android:id="@+id/btn_home"
+                style="@style/SplitPad.IconButton"
+                android:contentDescription="@string/action_home"
+                android:src="@drawable/ic_home" />
 
-        <!-- Quick Ratio Presets -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btn_ratio_3070"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="44dp"
-                android:layout_height="36dp"
-                android:padding="0dp"
-                android:text="30:70"
-                android:textColor="@color/text_secondary"
-                android:textSize="11sp" />
-
-            <Button
-                android:id="@+id/btn_ratio_5050"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="44dp"
-                android:layout_height="36dp"
-                android:padding="0dp"
-                android:text="50:50"
-                android:textColor="@color/accent_blue"
-                android:textSize="11sp"
+            <TextView
+                android:id="@+id/tv_toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/home_title"
+                android:textColor="@color/accent"
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
+            <!-- Scrolls horizontally so the bar never clips on an 8.7" screen -->
+            <HorizontalScrollView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn_ratio_3070"
+                        style="@style/SplitPad.ToolButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="34dp"
+                        android:layout_marginEnd="4dp"
+                        android:text="1/3" />
+
+                    <Button
+                        android:id="@+id/btn_ratio_5050"
+                        style="@style/SplitPad.ToolButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="34dp"
+                        android:layout_marginEnd="4dp"
+                        android:text="1/2" />
+
+                    <Button
+                        android:id="@+id/btn_ratio_7030"
+                        style="@style/SplitPad.ToolButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="34dp"
+                        android:layout_marginEnd="8dp"
+                        android:text="2/3" />
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="22dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@color/border_subtle" />
+
+                    <Button
+                        android:id="@+id/btn_swap_panes"
+                        style="@style/SplitPad.ToolButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="34dp"
+                        android:layout_marginEnd="4dp"
+                        android:drawableStart="@drawable/ic_swap"
+                        android:drawablePadding="4dp"
+                        android:drawableTint="@color/text_secondary"
+                        android:text="@string/action_swap" />
+
+                    <Button
+                        android:id="@+id/btn_rotate_split"
+                        style="@style/SplitPad.ToolButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="34dp"
+                        android:layout_marginEnd="4dp"
+                        android:drawableStart="@drawable/ic_rotate"
+                        android:drawablePadding="4dp"
+                        android:drawableTint="@color/text_secondary"
+                        android:text="@string/action_rotate" />
+
+                    <Button
+                        android:id="@+id/btn_launch_native_app"
+                        style="@style/SplitPad.ToolButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="34dp"
+                        android:layout_marginEnd="4dp"
+                        android:drawableStart="@drawable/ic_apps"
+                        android:drawablePadding="4dp"
+                        android:drawableTint="@color/text_secondary"
+                        android:text="@string/action_apps" />
+
+                    <Button
+                        android:id="@+id/btn_save_pair"
+                        style="@style/SplitPad.ToolButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="34dp"
+                        android:layout_marginEnd="4dp"
+                        android:drawableStart="@drawable/ic_star"
+                        android:drawablePadding="4dp"
+                        android:drawableTint="@color/text_secondary"
+                        android:text="@string/action_save_pair" />
+
+                    <Button
+                        android:id="@+id/btn_saved_pairs"
+                        style="@style/SplitPad.ToolButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="34dp"
+                        android:layout_marginEnd="4dp"
+                        android:drawableStart="@drawable/ic_folder"
+                        android:drawablePadding="4dp"
+                        android:drawableTint="@color/text_secondary"
+                        android:text="@string/action_pairs" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
             <Button
-                android:id="@+id/btn_ratio_7030"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="44dp"
-                android:layout_height="36dp"
-                android:padding="0dp"
-                android:text="70:30"
-                android:textColor="@color/text_secondary"
-                android:textSize="11sp" />
+                android:id="@+id/btn_floating_overlay"
+                style="@style/SplitPad.ToolButton.Accent"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:layout_marginStart="6dp"
+                android:drawableStart="@drawable/ic_float"
+                android:drawablePadding="4dp"
+                android:drawableTint="@color/text_on_accent"
+                android:text="@string/action_floating" />
         </LinearLayout>
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="24dp"
-            android:layout_marginHorizontal="6dp"
-            android:background="@color/divider_color" />
-
-        <Button
-            android:id="@+id/btn_swap_panes"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="🔄 Swap"
-            android:textColor="@color/text_primary" />
-
-        <Button
-            android:id="@+id/btn_rotate_split"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="📐 Dir"
-            android:textColor="@color/text_primary" />
-
-        <Button
-            android:id="@+id/btn_launch_native_app"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="⚡ Split 2 Apps"
-            android:textColor="@color/accent_blue"
-            android:textStyle="bold" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1" />
-
-        <Button
-            android:id="@+id/btn_save_pair"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="⭐ Pair"
-            android:textColor="@color/text_primary" />
-
-        <Button
-            android:id="@+id/btn_saved_pairs"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="📂 Saved"
-            android:textColor="@color/text_primary" />
-
-        <Button
-            android:id="@+id/btn_floating_overlay"
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="34dp"
-            android:backgroundTint="@color/accent_blue"
-            android:text="🔲 Floating"
-            android:textColor="@color/text_light_primary"
-            android:textSize="11sp" />
-    </LinearLayout>
-
-    <!-- Split Container -->
-    <LinearLayout
-        android:id="@+id/split_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:baselineAligned="false"
-        android:orientation="vertical">
-
-        <!-- PANE 1 -->
+        <!-- ========================= SPLIT CONTAINER ========================= -->
         <LinearLayout
-            android:id="@+id/pane1_container"
+            android:id="@+id/split_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="8dp"
             android:layout_weight="1"
+            android:baselineAligned="false"
             android:orientation="vertical">
 
-            <!-- Pane 1 Control Bar -->
+            <!-- PANE 1 -->
             <LinearLayout
+                android:id="@+id/pane1_container"
                 android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:background="@color/card_light"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingHorizontal="8dp">
+                android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:background="@drawable/bg_pane_focus"
+                android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="👈 Pane 1"
-                    android:textColor="@color/accent_blue"
-                    android:textSize="11sp"
-                    android:textStyle="bold"
-                    android:paddingEnd="6dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="6dp">
 
-                <ImageButton
-                    android:id="@+id/btn_pane1_back"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:contentDescription="Back"
-                    android:src="@android:drawable/ic_media_previous"
-                    app:tint="@color/text_primary" />
+                    <TextView
+                        android:id="@+id/tv_pane1_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_badge"
+                        android:paddingStart="8dp"
+                        android:paddingTop="2dp"
+                        android:paddingEnd="8dp"
+                        android:paddingBottom="2dp"
+                        android:text="@string/pane_1"
+                        android:textColor="@color/accent"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
 
-                <ImageButton
-                    android:id="@+id/btn_pane1_reload"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:contentDescription="Reload"
-                    android:src="@android:drawable/ic_popup_sync"
-                    app:tint="@color/text_primary" />
+                    <ImageButton
+                        android:id="@+id/btn_pane1_back"
+                        style="@style/SplitPad.IconButton"
+                        android:layout_marginStart="4dp"
+                        android:contentDescription="@string/action_back"
+                        android:src="@drawable/ic_back" />
 
-                <EditText
-                    android:id="@+id/et_pane1_url"
-                    android:layout_width="0dp"
-                    android:layout_height="32dp"
-                    android:layout_weight="1"
-                    android:background="@color/surface_dark"
-                    android:hint="@string/top_pane_hint"
-                    android:imeOptions="actionGo"
-                    android:inputType="textUri"
-                    android:paddingHorizontal="8dp"
-                    android:textColor="@color/text_primary"
-                    android:textColorHint="@color/text_secondary"
-                    android:textSize="12sp" />
+                    <ImageButton
+                        android:id="@+id/btn_pane1_forward"
+                        style="@style/SplitPad.IconButton"
+                        android:contentDescription="@string/action_forward"
+                        android:src="@drawable/ic_forward" />
 
-                <ToggleButton
-                    android:id="@+id/tb_pane1_ua"
-                    android:layout_width="64dp"
-                    android:layout_height="30dp"
-                    android:background="@color/surface_dark"
-                    android:textColor="@color/accent_blue"
-                    android:textOff="Mobile"
-                    android:textOn="Desktop"
-                    android:textSize="10sp" />
+                    <ImageButton
+                        android:id="@+id/btn_pane1_reload"
+                        style="@style/SplitPad.IconButton"
+                        android:contentDescription="@string/action_reload"
+                        android:src="@drawable/ic_reload" />
+
+                    <EditText
+                        android:id="@+id/et_pane1_url"
+                        android:layout_width="0dp"
+                        android:layout_height="34dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_glass_input"
+                        android:hint="@string/pane_1_hint"
+                        android:imeOptions="actionGo|flagNoExtractUi"
+                        android:importantForAutofill="no"
+                        android:inputType="textUri"
+                        android:maxLines="1"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:singleLine="true"
+                        android:textColor="@color/text_primary"
+                        android:textColorHint="@color/text_tertiary"
+                        android:textSize="12sp" />
+
+                    <Button
+                        android:id="@+id/btn_pane1_ua"
+                        style="@style/SplitPad.ToolButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:text="@string/mobile_mode"
+                        android:textSize="10sp" />
+
+                    <ImageButton
+                        android:id="@+id/btn_pane1_more"
+                        style="@style/SplitPad.IconButton"
+                        android:contentDescription="@string/action_more"
+                        android:src="@drawable/ic_more_vert" />
+                </LinearLayout>
+
+                <ProgressBar
+                    android:id="@+id/pb_pane1"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:max="100"
+                    android:progressDrawable="@drawable/progress_pane"
+                    android:visibility="invisible" />
+
+                <FrameLayout
+                    android:id="@+id/pane1_web_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+
+                    <WebView
+                        android:id="@+id/webview_pane1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </FrameLayout>
             </LinearLayout>
 
-            <WebView
-                android:id="@+id/webview_pane1"
+            <!-- DRAGGABLE DIVIDER -->
+            <FrameLayout
+                android:id="@+id/divider_handle"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </LinearLayout>
+                android:layout_height="22dp"
+                android:contentDescription="@string/divider_hint"
+                android:focusable="true"
+                android:paddingStart="4dp"
+                android:paddingTop="4dp"
+                android:paddingEnd="4dp"
+                android:paddingBottom="4dp">
 
-        <!-- DRAGGABLE DIVIDER HANDLE -->
-        <FrameLayout
-            android:id="@+id/divider_handle"
-            android:layout_width="match_parent"
-            android:layout_height="14dp"
-            android:background="@color/divider_color">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_divider_track" />
 
-            <View
-                android:layout_width="48dp"
-                android:layout_height="4dp"
-                android:layout_gravity="center"
-                android:background="@color/divider_active" />
-        </FrameLayout>
-
-        <!-- PANE 2 -->
-        <LinearLayout
-            android:id="@+id/pane2_container"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <!-- Pane 2 Control Bar -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:background="@color/card_light"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingHorizontal="8dp">
+                <View
+                    android:id="@+id/divider_grip"
+                    android:layout_width="52dp"
+                    android:layout_height="6dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_divider_grip" />
 
                 <TextView
+                    android:id="@+id/tv_ratio_tooltip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="👉 Pane 2"
-                    android:textColor="@color/accent_blue"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_toast_hint"
+                    android:paddingStart="10dp"
+                    android:paddingTop="3dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="3dp"
+                    android:text="50 : 50"
+                    android:textColor="@color/text_primary"
                     android:textSize="11sp"
                     android:textStyle="bold"
-                    android:paddingEnd="6dp" />
+                    android:visibility="gone" />
+            </FrameLayout>
 
-                <ImageButton
-                    android:id="@+id/btn_pane2_back"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:contentDescription="Back"
-                    android:src="@android:drawable/ic_media_previous"
-                    app:tint="@color/text_primary" />
-
-                <ImageButton
-                    android:id="@+id/btn_pane2_reload"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:background="?selectableItemBackgroundBorderless"
-                    android:contentDescription="Reload"
-                    android:src="@android:drawable/ic_popup_sync"
-                    app:tint="@color/text_primary" />
-
-                <EditText
-                    android:id="@+id/et_pane2_url"
-                    android:layout_width="0dp"
-                    android:layout_height="32dp"
-                    android:layout_weight="1"
-                    android:background="@color/surface_dark"
-                    android:hint="@string/bottom_pane_hint"
-                    android:imeOptions="actionGo"
-                    android:inputType="textUri"
-                    android:paddingHorizontal="8dp"
-                    android:textColor="@color/text_primary"
-                    android:textColorHint="@color/text_secondary"
-                    android:textSize="12sp" />
-
-                <ToggleButton
-                    android:id="@+id/tb_pane2_ua"
-                    android:layout_width="64dp"
-                    android:layout_height="30dp"
-                    android:background="@color/surface_dark"
-                    android:textColor="@color/accent_blue"
-                    android:textOff="Mobile"
-                    android:textOn="Desktop"
-                    android:textSize="10sp" />
-            </LinearLayout>
-
-            <WebView
-                android:id="@+id/webview_pane2"
+            <!-- PANE 2 -->
+            <LinearLayout
+                android:id="@+id/pane2_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </LinearLayout>
+                android:layout_height="0dp"
+                android:layout_weight="0.5"
+                android:background="@drawable/bg_pane_focus"
+                android:orientation="vertical">
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="6dp">
+
+                    <TextView
+                        android:id="@+id/tv_pane2_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_badge"
+                        android:paddingStart="8dp"
+                        android:paddingTop="2dp"
+                        android:paddingEnd="8dp"
+                        android:paddingBottom="2dp"
+                        android:text="@string/pane_2"
+                        android:textColor="@color/accent"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+
+                    <ImageButton
+                        android:id="@+id/btn_pane2_back"
+                        style="@style/SplitPad.IconButton"
+                        android:layout_marginStart="4dp"
+                        android:contentDescription="@string/action_back"
+                        android:src="@drawable/ic_back" />
+
+                    <ImageButton
+                        android:id="@+id/btn_pane2_forward"
+                        style="@style/SplitPad.IconButton"
+                        android:contentDescription="@string/action_forward"
+                        android:src="@drawable/ic_forward" />
+
+                    <ImageButton
+                        android:id="@+id/btn_pane2_reload"
+                        style="@style/SplitPad.IconButton"
+                        android:contentDescription="@string/action_reload"
+                        android:src="@drawable/ic_reload" />
+
+                    <EditText
+                        android:id="@+id/et_pane2_url"
+                        android:layout_width="0dp"
+                        android:layout_height="34dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_glass_input"
+                        android:hint="@string/pane_2_hint"
+                        android:imeOptions="actionGo|flagNoExtractUi"
+                        android:importantForAutofill="no"
+                        android:inputType="textUri"
+                        android:maxLines="1"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:singleLine="true"
+                        android:textColor="@color/text_primary"
+                        android:textColorHint="@color/text_tertiary"
+                        android:textSize="12sp" />
+
+                    <Button
+                        android:id="@+id/btn_pane2_ua"
+                        style="@style/SplitPad.ToolButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:text="@string/mobile_mode"
+                        android:textSize="10sp" />
+
+                    <ImageButton
+                        android:id="@+id/btn_pane2_more"
+                        style="@style/SplitPad.IconButton"
+                        android:contentDescription="@string/action_more"
+                        android:src="@drawable/ic_more_vert" />
+                </LinearLayout>
+
+                <ProgressBar
+                    android:id="@+id/pb_pane2"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:max="100"
+                    android:progressDrawable="@drawable/progress_pane"
+                    android:visibility="invisible" />
+
+                <FrameLayout
+                    android:id="@+id/pane2_web_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+
+                    <WebView
+                        android:id="@+id/webview_pane2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+                </FrameLayout>
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
-    <!-- HOME SCREEN ONBOARDING VIEW -->
-    <LinearLayout
+    <!-- ============================================================
+         HOME / MODE PICKER
+         ============================================================ -->
+    <ScrollView
         android:id="@+id/home_screen_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/bg_light"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:fillViewport="true"
+        android:scrollbars="none">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="⚡ Split Pad Pro"
-            android:textColor="@color/text_primary"
-            android:textSize="36sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Select a multitasking mode to begin"
-            android:textColor="@color/text_secondary"
-            android:textSize="16sp"
-            android:layout_marginBottom="48dp" />
-
-        <!-- Mode 1: Dual Web Browser -->
         <LinearLayout
-            android:id="@+id/btn_mode_dual_web"
-            android:layout_width="320dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/rounded_button_bg"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="20dp"
-            android:layout_marginBottom="16dp"
-            android:clickable="true"
-            android:focusable="true">
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingTop="32dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="32dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🌐"
-                android:textSize="28sp"
-                android:layout_marginEnd="16dp" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Dual Web Browser"
-                    android:textColor="@color/text_primary"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Split two websites side-by-side"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="14sp" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <!-- Mode 2: Split 2 Native Apps -->
-        <LinearLayout
-            android:id="@+id/btn_mode_split_native"
-            android:layout_width="320dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_button_bg"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="20dp"
-            android:layout_marginBottom="16dp"
-            android:clickable="true"
-            android:focusable="true">
+                android:text="@string/home_title"
+                android:textColor="@color/text_primary"
+                android:textSize="34sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="📱"
-                android:textSize="28sp"
-                android:layout_marginEnd="16dp" />
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="28dp"
+                android:gravity="center"
+                android:text="@string/home_subtitle"
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp" />
 
+            <!-- Mode 1 -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:id="@+id/btn_mode_dual_web"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/bg_mode_card"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="18dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Split 2 Native Apps"
-                    android:textColor="@color/text_primary"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginEnd="16dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_grid_split"
+                    app:tint="@color/accent" />
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Launch two installed apps via system"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="14sp" />
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/SplitPad.Text.Title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/mode_dual_web_title" />
+
+                    <TextView
+                        style="@style/SplitPad.Text.Body"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/mode_dual_web_desc" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="@color/text_tertiary" />
             </LinearLayout>
-        </LinearLayout>
 
-        <!-- Mode 3: 1 Full + 1 Floating -->
-        <LinearLayout
-            android:id="@+id/btn_mode_floating"
-            android:layout_width="320dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_button_bg"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="20dp"
-            android:clickable="true"
-            android:focusable="true">
+            <!-- Mode 2 -->
+            <LinearLayout
+                android:id="@+id/btn_mode_split_native"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/bg_mode_card"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="18dp">
 
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginEnd="16dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_apps"
+                    app:tint="@color/accent" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/SplitPad.Text.Title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/mode_native_title" />
+
+                    <TextView
+                        style="@style/SplitPad.Text.Body"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/mode_native_desc" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="@color/text_tertiary" />
+            </LinearLayout>
+
+            <!-- Mode 3 -->
+            <LinearLayout
+                android:id="@+id/btn_mode_floating"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/bg_mode_card"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="18dp">
+
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginEnd="16dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_float"
+                    app:tint="@color/accent" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/SplitPad.Text.Title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/mode_floating_title" />
+
+                    <TextView
+                        style="@style/SplitPad.Text.Body"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/mode_floating_desc" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="@color/text_tertiary" />
+            </LinearLayout>
+
+            <!-- Saved pairs strip -->
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="🔲"
-                android:textSize="28sp"
-                android:layout_marginEnd="16dp" />
+                android:layout_marginBottom="10dp"
+                android:text="@string/recent_pairs"
+                android:textColor="@color/text_secondary"
+                android:textSize="12sp"
+                android:textStyle="bold" />
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:id="@+id/home_pairs_list"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Full Screen + Floating"
-                    android:textColor="@color/text_primary"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Launch one app full screen, one floating"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="14sp" />
-            </LinearLayout>
+                android:orientation="vertical" />
         </LinearLayout>
+    </ScrollView>
 
-    </LinearLayout>
+    <!-- Transient glass hint shown after gestures -->
+    <TextView
+        android:id="@+id/tv_hint_toast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="28dp"
+        android:background="@drawable/bg_toast_hint"
+        android:elevation="10dp"
+        android:paddingStart="18dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="18dp"
+        android:paddingBottom="10dp"
+        android:textColor="@color/text_primary"
+        android:textSize="13sp"
+        android:visibility="gone" />
 </FrameLayout>
