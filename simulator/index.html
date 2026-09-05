@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redmi Pad SE 8.7 - Commercial Split Screen Pro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Background Animated Dashboard Glow -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+
+  <!-- Commercial Header Bar -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="logo-badge">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-title">Split Pad Pro</span>
+      </div>
+      <span class="device-tag">Redmi Pad SE 8.7 Commercial Suite</span>
+    </div>
+
+    <!-- Quick Ratio Pills -->
+    <div class="ratio-pill-group">
+      <button class="ratio-pill" id="btn-ratio-3070">30:70</button>
+      <button class="ratio-pill active" id="btn-ratio-5050">50:50</button>
+      <button class="ratio-pill" id="btn-ratio-7030">70:30</button>
+    </div>
+
+    <div class="header-actions">
+      <button id="btn-swap-panes" class="btn btn-secondary">
+        <span class="icon">🔄</span> <span class="btn-text">Swap Panes</span>
+      </button>
+      <button id="btn-toggle-direction" class="btn btn-secondary">
+        <span class="icon">📐</span> <span class="btn-text">Rotate Split</span>
+      </button>
+      <button id="btn-open-native-picker" class="btn btn-primary">
+        <span class="icon">⚡</span> <span class="btn-text">Split 2 Apps</span>
+      </button>
+      <button id="btn-quick-pair" class="btn btn-secondary">
+        <span class="icon">⭐</span> <span class="btn-text">Save Pair</span>
+      </button>
+      <button id="btn-open-pairs" class="btn btn-secondary">
+        <span class="icon">📂</span> <span class="btn-text">App Pairs</span>
+      </button>
+      <button id="btn-toggle-floating" class="btn btn-primary">
+        <span class="icon">🔲</span> <span class="btn-text">Floating Overlay</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Tablet Frame Container -->
+  <main class="tablet-frame-wrapper">
+    <div class="tablet-bezel" id="tablet-shell">
+      
+      <!-- Camera Lens Placeholder -->
+      <div class="camera-dot"></div>
+
+      <!-- Commercial Tablet Screen Body -->
+      <div class="tablet-screen" id="tablet-screen">
+
+        <!-- PERSISTENT TABLET SIDE EDGE DOCK (iPadOS / Samsung DeX style) -->
+        <aside class="edge-dock" id="edge-dock">
+          <div class="dock-handle" id="dock-toggle-btn" title="Toggle Dock Bar">⋮</div>
+          <div class="dock-content">
+            <div class="dock-item" data-app="YouTube" data-url="https://m.youtube.com" title="YouTube">
+              <div class="dock-icon icon-red">▶️</div>
+            </div>
+            <div class="dock-item" data-app="Google Search" data-url="https://www.google.com" title="Google Search">
+              <div class="dock-icon icon-cyan">🌐</div>
+            </div>
+            <div class="dock-item" data-app="ChatGPT AI" data-url="https://chatgpt.com" title="ChatGPT">
+              <div class="dock-icon icon-green">🤖</div>
+            </div>
+            <div class="dock-item" data-app="Wikipedia" data-url="https://www.wikipedia.org" title="Wikipedia">
+              <div class="dock-icon icon-purple">📚</div>
+            </div>
+            <div class="dock-item" data-app="Facebook" data-url="https://m.facebook.com" title="Facebook">
+              <div class="dock-icon icon-blue">👤</div>
+            </div>
+            <div class="dock-item" data-app="Google News" data-url="https://news.google.com" title="Google News">
+              <div class="dock-icon icon-orange">📰</div>
+            </div>
+            <div class="dock-divider"></div>
+            <div class="dock-item" id="dock-btn-swap" title="1-Tap Swap Panes">
+              <div class="dock-icon icon-dark">🔄</div>
+            </div>
+            <div class="dock-item" id="dock-btn-native" title="Select Native App">
+              <div class="dock-icon icon-dark">📱</div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- SIMULATED BACKGROUND SYSTEM APP (Visible in Floating Window Mode) -->
+        <div id="system-bg-app" class="system-bg-app hidden">
+          <div class="system-app-bar">
+            <span>⚙️ Xiaomi HyperOS - Native App Running in Background</span>
+            <button id="btn-close-bg-mode" class="btn-icon">✕</button>
+          </div>
+          <div class="system-app-grid">
+            <div class="app-icon-card">
+              <div class="icon-box icon-red">📸</div>
+              <span>Camera</span>
+            </div>
+            <div class="app-icon-card">
+              <div class="icon-box icon-blue">💬</div>
+              <span>Messenger</span>
+            </div>
+            <div class="app-icon-card">
+              <div class="icon-box icon-green">🎮</div>
+              <span>Games</span>
+            </div>
+            <div class="app-icon-card">
+              <div class="icon-box icon-purple">🎵</div>
+              <span>Music</span>
+            </div>
+            <div class="app-icon-card">
+              <div class="icon-box icon-orange">📁</div>
+              <span>Files</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- DUAL SPLIT CONTAINER -->
+        <div class="split-container split-vertical" id="split-container">
+
+          <!-- PANE 1 -->
+          <div class="pane-box active-pane" id="pane1" style="flex: 1;">
+            <div class="pane-control-bar">
+              <span class="pane-badge">👈 Pane 1</span>
+              <div class="pane-nav-buttons">
+                <button class="btn-icon" id="pane1-back" title="Back">◄</button>
+                <button class="btn-icon" id="pane1-reload" title="Reload">↻</button>
+              </div>
+
+              <div class="url-input-group">
+                <span class="url-protocol">https://</span>
+                <input type="text" id="pane1-url-input" class="url-input" value="m.youtube.com" placeholder="Search or type URL...">
+                <button class="btn-go" id="pane1-go">Go</button>
+              </div>
+
+              <div class="pane-options">
+                <button class="btn-mode-toggle active" id="pane1-ua-btn" title="Toggle Desktop/Mobile mode">
+                  📱 Mobile
+                </button>
+                <div class="preset-dropdown-container">
+                  <select id="pane1-preset" class="preset-select">
+                    <option value="" disabled selected>Presets</option>
+                    <option value="https://m.youtube.com">YouTube</option>
+                    <option value="https://www.google.com">Google</option>
+                    <option value="https://chatgpt.com">ChatGPT</option>
+                    <option value="https://www.wikipedia.org">Wikipedia</option>
+                    <option value="https://www.reddit.com">Reddit</option>
+                    <option value="https://news.google.com">Google News</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Iframe Container Pane 1 -->
+            <div class="iframe-wrapper" id="pane1-wrapper">
+              <iframe id="pane1-iframe" src="https://m.youtube.com" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+          </div>
+
+          <!-- DRAGGABLE DIVIDER SLIDER HANDLE -->
+          <div class="divider-handle-bar" id="divider-slider" title="Drag to adjust split ratio">
+            <div class="divider-pill"></div>
+            <span id="split-ratio-tooltip" class="ratio-tooltip">50 : 50</span>
+          </div>
+
+          <!-- PANE 2 -->
+          <div class="pane-box" id="pane2" style="flex: 1;">
+            <div class="pane-control-bar">
+              <span class="pane-badge">👉 Pane 2</span>
+              <div class="pane-nav-buttons">
+                <button class="btn-icon" id="pane2-back" title="Back">◄</button>
+                <button class="btn-icon" id="pane2-reload" title="Reload">↻</button>
+              </div>
+
+              <div class="url-input-group">
+                <span class="url-protocol">https://</span>
+                <input type="text" id="pane2-url-input" class="url-input" value="www.google.com" placeholder="Search or type URL...">
+                <button class="btn-go" id="pane2-go">Go</button>
+              </div>
+
+              <div class="pane-options">
+                <button class="btn-mode-toggle active" id="pane2-ua-btn" title="Toggle Desktop/Mobile mode">
+                  📱 Mobile
+                </button>
+                <div class="preset-dropdown-container">
+                  <select id="pane2-preset" class="preset-select">
+                    <option value="" disabled selected>Presets</option>
+                    <option value="https://m.youtube.com">YouTube</option>
+                    <option value="https://www.google.com">Google</option>
+                    <option value="https://chatgpt.com">ChatGPT</option>
+                    <option value="https://www.wikipedia.org">Wikipedia</option>
+                    <option value="https://www.reddit.com">Reddit</option>
+                    <option value="https://news.google.com">Google News</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Iframe Container Pane 2 -->
+            <div class="iframe-wrapper" id="pane2-wrapper">
+              <iframe id="pane2-iframe" src="https://www.google.com" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- SIMULATED FLOATING OVERLAY WINDOW -->
+        <div id="floating-overlay-window" class="floating-window hidden">
+          <div class="floating-header" id="floating-drag-handle">
+            <span class="floating-title">📱 Floating Window Overlay</span>
+            <div class="floating-actions">
+              <button id="btn-minimize-floating" class="btn-icon-sm">_</button>
+              <button id="btn-close-floating" class="btn-icon-sm">✕</button>
+            </div>
+          </div>
+          <div class="floating-toolbar">
+            <input type="text" id="floating-url-input" class="url-input" value="https://www.wikipedia.org">
+            <button id="floating-go-btn" class="btn-go">Go</button>
+          </div>
+          <div class="floating-body">
+            <iframe id="floating-iframe" src="https://www.wikipedia.org"></iframe>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- TARGET PLACEMENT SELECTOR MODAL -->
+  <div id="target-selector-modal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="target-modal-title">Where to place App?</h3>
+        <button id="btn-close-target-modal" class="btn-icon">✕</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">Select which target pane or window mode to load this app into:</p>
+        <div class="target-options-grid">
+          <button class="target-option-btn" id="target-opt-pane1">
+            <span class="opt-icon">👈</span>
+            <div class="opt-text">
+              <strong>Open in Pane 1</strong>
+              <span>Top / Left Split Pane</span>
+            </div>
+          </button>
+          <button class="target-option-btn" id="target-opt-pane2">
+            <span class="opt-icon">👉</span>
+            <div class="opt-text">
+              <strong>Open in Pane 2</strong>
+              <span>Bottom / Right Split Pane</span>
+            </div>
+          </button>
+          <button class="target-option-btn" id="target-opt-floating">
+            <span class="opt-icon">🔲</span>
+            <div class="opt-text">
+              <strong>Open in Floating Overlay</strong>
+              <span>Always-on-top Overlay Window</span>
+            </div>
+          </button>
+          <button class="target-option-btn" id="target-opt-system">
+            <span class="opt-icon">🚀</span>
+            <div class="opt-text">
+              <strong>Launch System Split</strong>
+              <span>Native System Multi-Window</span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SAVED PAIRS MODAL -->
+  <div id="pairs-modal" class="modal-backdrop hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Saved App Pairs</h3>
+        <button id="btn-close-pairs-modal" class="btn-icon">✕</button>
+      </div>
+      <div class="modal-body" id="saved-pairs-list">
+        <!-- Dynamic list populated via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 2-STAGE STEP-BY-STEP APP PICKER MODAL -->
+  <div id="native-apps-modal" class="modal-backdrop hidden">
+    <div class="modal-card modal-wide">
+      <div class="modal-header">
+        <div class="stage-header-title">
+          <span class="stage-badge" id="picker-stage-badge">Step 1 of 2</span>
+          <h3 id="picker-stage-title">Select App 1 (Left / Main Pane)</h3>
+        </div>
+        <button id="btn-close-native-modal" class="btn-icon">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="picker-search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="app-search-input" class="search-input" placeholder="Search installed apps (e.g. Zalo, Chrome)...">
+        </div>
+        <p class="modal-desc" id="picker-stage-desc">Tap an app to select it as App 1, then automatically proceed to select App 2:</p>
+        <div class="native-apps-grid" id="native-apps-grid">
+          <!-- Dynamic installed app cards -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="simulator.js"></script>
+</body>
+</html>

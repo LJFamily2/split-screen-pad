@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Split Screen Pad</string>
+    <string name="top_pane_hint">Enter URL for Pane 1...</string>
+    <string name="bottom_pane_hint">Enter URL for Pane 2...</string>
+    <string name="go">Go</string>
+    <string name="desktop_mode">Desktop</string>
+    <string name="mobile_mode">Mobile</string>
+    <string name="floating_overlay">Floating Mode</string>
+    <string name="save_app_pair">Save Pair</string>
+    <string name="saved_pairs">App Pairs</string>
+    <string name="orientation_toggle">Rotate Split</string>
+    <string name="overlay_permission_title">Display Over Other Apps</string>
+    <string name="overlay_permission_msg">Floating Overlay Mode allows you to keep a window open on top of native Android apps. Please grant overlay permission in system settings.</string>
+    <string name="grant_permission">Grant Permission</string>
+</resources>

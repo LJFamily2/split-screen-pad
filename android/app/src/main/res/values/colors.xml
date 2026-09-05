@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- iOS Light Glassmorphism Palette -->
+    <color name="ios_bg_light">#EAEFFF</color>
+    <color name="bg_light">#EAEFFF</color>
+    <color name="surface_light">#F8F9FD</color>
+    <color name="card_light">#FFFFFF</color>
+    <color name="glass_card_bg">#F2F5FF</color>
+    
+    <color name="bg_dark">#0B0E14</color>
+    <color name="surface_dark">#1C1C1E</color>
+    <color name="card_dark">#2C2C2E</color>
+
+    <color name="accent_blue">#007AFF</color>
+    <color name="accent_indigo">#5856D6</color>
+    <color name="accent_purple">#AF52DE</color>
+    <color name="accent_pink">#FF2D55</color>
+    <color name="accent_cyan">#32ADE6</color>
+
+    <color name="text_primary">#1C1C1E</color>
+    <color name="text_secondary">#636366</color>
+    <color name="text_light_primary">#FFFFFF</color>
+    
+    <color name="divider_color">#D1D1D6</color>
+    <color name="divider_active">#007AFF</color>
+    <color name="border_color">#E5E5EA</color>
+    <color name="accent_blue_alpha">#33007AFF</color>
+
+    <color name="ic_launcher_background">#007AFF</color>
+</resources>

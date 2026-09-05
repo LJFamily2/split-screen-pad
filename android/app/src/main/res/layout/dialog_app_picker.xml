@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_glass_card_light"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <!-- Header Stage Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:id="@+id/tv_picker_stage_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_stage_badge"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
+            android:text="STEP 1 OF 2"
+            android:textColor="@color/accent_blue"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_picker_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingStart="10dp"
+            android:text="Select App 1 (Main Screen)"
+            android:textColor="@color/text_primary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_picker_subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tap App 1 (e.g. Zalo) to select it, then proceed to select App 2:"
+        android:textColor="@color/text_secondary"
+        android:textSize="12sp"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Custom Website / PWA Button -->
+    <Button
+        android:id="@+id/btn_add_custom_url"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="🌐 Enter Custom Website / Downloaded PWA URL..."
+        android:textColor="@color/accent_blue"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="10dp" />
+
+    <!-- Instant Search Field -->
+    <EditText
+        android:id="@+id/et_app_search"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:background="@drawable/bg_glass_input_light"
+        android:drawableStart="@android:drawable/ic_menu_search"
+        android:drawablePadding="8dp"
+        android:hint="Search installed apps (e.g. Zalo, Chrome)..."
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:paddingHorizontal="12dp"
+        android:textColor="@color/text_primary"
+        android:textColorHint="@color/text_secondary"
+        android:textSize="13sp"
+        android:layout_marginBottom="14dp" />
+
+    <!-- Apps List View -->
+    <ListView
+        android:id="@+id/lv_installed_apps"
+        android:layout_width="match_parent"
+        android:layout_height="320dp"
+        android:divider="@color/divider_color"
+        android:dividerHeight="1dp"
+        android:scrollbars="vertical" />
+
+</LinearLayout>

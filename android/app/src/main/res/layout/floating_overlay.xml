@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/floating_root"
+    android:layout_width="340dp"
+    android:layout_height="460dp"
+    android:background="@color/surface_dark"
+    android:elevation="12dp"
+    android:orientation="vertical"
+    android:padding="2dp">
+
+    <!-- Floating Window Header Bar (Touch to Drag Window) -->
+    <LinearLayout
+        android:id="@+id/floating_header"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:background="@color/card_dark"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="8dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="📱 Floating Window"
+            android:textColor="@color/text_primary"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/btn_floating_minimize"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:contentDescription="Minimize"
+            android:src="@android:drawable/arrow_down_float"
+            app:tint="@color/text_primary" />
+
+        <ImageButton
+            android:id="@+id/btn_floating_close"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:background="?selectableItemBackgroundBorderless"
+            android:contentDescription="Close"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            app:tint="@color/text_primary" />
+    </LinearLayout>
+
+    <!-- Floating Navigation Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:background="@color/surface_dark"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="4dp">
+
+        <EditText
+            android:id="@+id/et_floating_url"
+            android:layout_width="0dp"
+            android:layout_height="28dp"
+            android:layout_weight="1"
+            android:background="@color/bg_dark"
+            android:hint="Search or type web address..."
+            android:imeOptions="actionGo"
+            android:inputType="textUri"
+            android:paddingHorizontal="6dp"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_secondary"
+            android:textSize="11sp" />
+
+        <Button
+            android:id="@+id/btn_floating_go"
+            android:layout_width="48dp"
+            android:layout_height="28dp"
+            android:backgroundTint="@color/accent_blue"
+            android:padding="0dp"
+            android:text="Go"
+            android:textColor="@color/bg_dark"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+    <!-- Floating WebView -->
+    <WebView
+        android:id="@+id/webview_floating"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>
