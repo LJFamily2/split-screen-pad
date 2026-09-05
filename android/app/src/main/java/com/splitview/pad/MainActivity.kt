@@ -44,6 +44,14 @@ class MainActivity : AppCompatActivity() {
     private var mobileUserAgentPane1: String = ""
     private var mobileUserAgentPane2: String = ""
 
+    private lateinit var homeScreenContainer: View
+    private lateinit var splitContentView: View
+
+    companion object {
+        const val MODE_SPLIT = 1
+        const val MODE_FLOATING = 2
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -75,6 +83,34 @@ class MainActivity : AppCompatActivity() {
 
         tbPane1Ua = findViewById(R.id.tb_pane1_ua)
         tbPane2Ua = findViewById(R.id.tb_pane2_ua)
+
+        homeScreenContainer = findViewById(R.id.home_screen_container)
+        splitContentView = findViewById(R.id.split_content_view)
+
+        setupHomeScreenModes()
+    }
+
+    private fun setupHomeScreenModes() {
+        val btnDualWeb = findViewById<View>(R.id.btn_mode_dual_web)
+        val btnSplitNative = findViewById<View>(R.id.btn_mode_split_native)
+        val btnFloating = findViewById<View>(R.id.btn_mode_floating)
+
+        applyTouchAnimation(btnDualWeb)
+        applyTouchAnimation(btnSplitNative)
+        applyTouchAnimation(btnFloating)
+
+        btnDualWeb.setOnClickListener {
+            homeScreenContainer.visibility = View.GONE
+            splitContentView.visibility = View.VISIBLE
+        }
+
+        btnSplitNative.setOnClickListener {
+            show2StageAppPicker(MODE_SPLIT)
+        }
+
+        btnFloating.setOnClickListener {
+            show2StageAppPicker(MODE_FLOATING)
+        }
     }
 
     private fun setupWebViews() {
@@ -238,7 +274,7 @@ class MainActivity : AppCompatActivity() {
         val btnLaunch = findViewById<Button>(R.id.btn_launch_native_app)
         applyTouchAnimation(btnLaunch)
         btnLaunch.setOnClickListener {
-            show2StageAppPicker()
+            show2StageAppPicker(MODE_SPLIT)
         }
 
         val btnSwap = findViewById<Button>(R.id.btn_swap_panes)
@@ -401,7 +437,7 @@ class MainActivity : AppCompatActivity() {
     )
 
     // 2-STAGE STEP-BY-STAGE APP SPLIT PICKER WITH INSTANT SEARCH & DUAL PANE SPLIT LAUNCH
-    private fun show2StageAppPicker() {
+    private fun show2StageAppPicker(mode: Int) {
         val pm = packageManager
         val mainIntent = Intent(Intent.ACTION_MAIN, null).apply {
             addCategory(Intent.CATEGORY_LAUNCHER)
@@ -443,6 +479,11 @@ class MainActivity : AppCompatActivity() {
         val etSearch = dialogView.findViewById<EditText>(R.id.et_app_search)
         val listView = dialogView.findViewById<ListView>(R.id.lv_installed_apps)
 
+        if (mode == MODE_FLOATING) {
+            tvTitle.text = "Select Full Screen App"
+            tvSubtitle.text = "Select the app you want to run in the background (full screen)."
+        }
+
         var filteredList = allAppsList.toMutableList()
 
         val adapter = object : ArrayAdapter<AppItem>(
@@ -480,8 +521,13 @@ class MainActivity : AppCompatActivity() {
                 selectedApp1 = selected
                 stage = 2
                 tvStageBadge.text = "STEP 2 OF 2"
-                tvTitle.text = "Select App 2 (Pane 2 / Right Screen)"
-                tvSubtitle.text = "App 1: ${selected.label} selected. Now select App 2 (e.g. Chrome) to split!"
+                if (mode == MODE_SPLIT) {
+                    tvTitle.text = "Select App 2 (Pane 2 / Right Screen)"
+                    tvSubtitle.text = "App 1: ${selected.label} selected. Now select App 2 (e.g. Chrome) to split!"
+                } else {
+                    tvTitle.text = "Select Floating App"
+                    tvSubtitle.text = "App 1: ${selected.label} selected. Now select App 2 to run in a floating window."
+                }
                 etSearch.setText("")
                 filteredList.clear()
                 filteredList.addAll(allAppsList)
@@ -491,7 +537,12 @@ class MainActivity : AppCompatActivity() {
                 dialog?.dismiss()
                 val a1 = selectedApp1 ?: return
                 val a2 = selectedApp2 ?: return
-                executeSmartLaunch(a1, a2)
+                
+                if (mode == MODE_SPLIT) {
+                    executeSmartLaunch(a1, a2)
+                } else if (mode == MODE_FLOATING) {
+                    executeFloatingLaunch(a1, a2)
+                }
             }
         }
 
@@ -587,6 +638,89 @@ class MainActivity : AppCompatActivity() {
                 Toast.LENGTH_LONG
             ).show()
         }
+    }
+
+    private fun executeFloatingLaunch(app1: AppItem, app2: AppItem) {
+        Toast.makeText(this, "⚡ Launching 1 Full Screen + 1 Floating...", Toast.LENGTH_SHORT).show()
+        
+        // 1. Launch App 1 normally in full screen
+        if (app1.packageName != null) {
+            val intent1 = packageManager.getLaunchIntentForPackage(app1.packageName)
+            intent1?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            if (intent1 != null) {
+                startActivity(intent1)
+            }
+        } else {
+            // It's a URL, open in Dual Web view mode, but just hide Pane 2? 
+            // Or just load it in full browser?
+            homeScreenContainer.visibility = View.GONE
+            splitContentView.visibility = View.VISIBLE
+            loadUrlPane1(app1.url)
+            val p1Params = pane1Container.layoutParams as LinearLayout.LayoutParams
+            p1Params.weight = 1.0f
+            val p2Params = pane2Container.layoutParams as LinearLayout.LayoutParams
+            p2Params.weight = 0.0f
+            pane1Container.layoutParams = p1Params
+            pane2Container.layoutParams = p2Params
+            splitContainer.requestLayout()
+        }
+
+        // 2. Launch App 2 in Floating Overlay or Freeform
+        android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+            if (app2.packageName != null) {
+                // Launch Native App in Freeform
+                val intent2 = packageManager.getLaunchIntentForPackage(app2.packageName)
+                if (intent2 != null) {
+                    intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+                    
+                    var optionsBundle: Bundle? = null
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        try {
+                            val options = android.app.ActivityOptions.makeBasic()
+                            val method = android.app.ActivityOptions::class.java.getMethod("setLaunchWindowingMode", Int::class.java)
+                            method.invoke(options, 5) // WINDOWING_MODE_FREEFORM
+                            
+                            // Set initial floating window size (e.g. centered on screen)
+                            val displayMetrics = resources.displayMetrics
+                            val width = (400 * displayMetrics.density).toInt()
+                            val height = (600 * displayMetrics.density).toInt()
+                            val left = (displayMetrics.widthPixels - width) / 2
+                            val top = (displayMetrics.heightPixels - height) / 2
+                            val bounds = android.graphics.Rect(left, top, left + width, top + height)
+                            options.setLaunchBounds(bounds)
+                            
+                            optionsBundle = options.toBundle()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+                    
+                    try {
+                        startActivity(intent2, optionsBundle)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        startActivity(intent2) // Fallback
+                    }
+                }
+            } else {
+                // Launch PWA / Web URL in Floating Overlay Service
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+                    val overlayIntent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:$packageName"))
+                    startActivity(overlayIntent)
+                    Toast.makeText(this, "Please grant Overlay Permission then try again", Toast.LENGTH_LONG).show()
+                } else {
+                    val overlayIntent = Intent(this, FloatingOverlayService::class.java).apply {
+                        putExtra(FloatingOverlayService.EXTRA_OVERLAY_URL, app2.url)
+                        putExtra(FloatingOverlayService.EXTRA_APP_NAME, app2.label)
+                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        startForegroundService(overlayIntent)
+                    } else {
+                        startService(overlayIntent)
+                    }
+                }
+            }
+        }, 1200)
     }
 
     private fun getWebEquivalent(packageName: String): String {

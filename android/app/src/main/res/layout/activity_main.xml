@@ -307,7 +307,8 @@
         </LinearLayout>
 
     </LinearLayout>
-
+    <!-- End split_content_view -->
+    </LinearLayout>
     <!-- HOME SCREEN ONBOARDING VIEW -->
     <LinearLayout
         android:id="@+id/home_screen_container"

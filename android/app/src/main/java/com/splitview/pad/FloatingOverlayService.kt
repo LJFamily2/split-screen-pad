@@ -123,6 +123,42 @@ class FloatingOverlayService : Service() {
             }
         })
 
+        // Setup Floating Window Resize Dragging
+        val btnResize = overlayView?.findViewById<ImageButton>(R.id.btn_floating_resize)
+        btnResize?.setOnTouchListener(object : View.OnTouchListener {
+            private var initialWidth = 0
+            private var initialHeight = 0
+            private var initialTouchX = 0f
+            private var initialTouchY = 0f
+
+            override fun onTouch(v: View?, event: MotionEvent): Boolean {
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        initialWidth = params.width
+                        initialHeight = params.height
+                        initialTouchX = event.rawX
+                        initialTouchY = event.rawY
+                        return true
+                    }
+                    MotionEvent.ACTION_MOVE -> {
+                        var newWidth = initialWidth + (event.rawX - initialTouchX).toInt()
+                        var newHeight = initialHeight + (event.rawY - initialTouchY).toInt()
+                        
+                        // Minimum size constraints
+                        newWidth = newWidth.coerceAtLeast((200 * metrics.density).toInt())
+                        newHeight = newHeight.coerceAtLeast((200 * metrics.density).toInt())
+                        
+                        params.width = newWidth
+                        params.height = newHeight
+                        expandedHeight = newHeight // Remember the new height for minimize/restore
+                        windowManager.updateViewLayout(overlayView, params)
+                        return true
+                    }
+                }
+                return false
+            }
+        })
+
         // Minimize / Restore Toggle Button
         val btnMinimize = overlayView?.findViewById<ImageButton>(R.id.btn_floating_minimize)
         val navBar = overlayView?.findViewById<View>(R.id.et_floating_url)?.parent as? View
