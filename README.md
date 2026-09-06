@@ -1,12 +1,12 @@
-# 📱 Split Screen Pad — Chia 2 & 3 Màn Hình Cho Xiaomi Redmi Pad SE 8.7
+# 📱 Split Screen Pad — Chia 2 & 3 Màn Hình Cho Android Tablet & Foldables
 
-![Android 14](https://img.shields.io/badge/Android-14%20%2F%20HyperOS-3DDC84?style=for-the-badge&logo=android&logoColor=white)
-![Platform](https://img.shields.io/badge/Target-Xiaomi%20Redmi%20Pad%20SE%208.7-FF6900?style=for-the-badge&logo=xiaomi&logoColor=white)
+![Android 7.0+](https://img.shields.io/badge/Android-7.0%2B%20%2F%2014%2B-3DDC84?style=for-the-badge&logo=android&logoColor=white)
+![Platform](https://img.shields.io/badge/Target-Android%20Tablets%20%26%20Foldables-FF6900?style=for-the-badge&logo=android&logoColor=white)
 ![Language](https://img.shields.io/badge/Kotlin%20%2F%20HTML5-007ACC?style=for-the-badge)
 ![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
 
-> 🚀 **Bộ công cụ đa nhiệm (multitasking) cho máy tính bảng Android — tối ưu cho Xiaomi Redmi Pad SE 8.7 (Android 14 / HyperOS).**
-> Gom những tính năng chia màn hình tốt nhất của One UI (Samsung), HyperOS (Xiaomi) và iPadOS vào một app duy nhất.
+> 🚀 **Bộ công cụ đa nhiệm (multitasking) chuyên nghiệp cho máy tính bảng và màn hình gập Android.**
+> Gom những tính năng chia màn hình tốt nhất của One UI (Samsung), HyperOS (Xiaomi), iPadOS và stock Android vào một ứng dụng duy nhất.
 > Hỗ trợ **2 khung** hoặc **3 khung** (1 app chiếm trọn một nửa + 2 app xếp trên/dưới ở nửa còn lại).
 
 ---
@@ -15,9 +15,9 @@
 
 Nếu bạn đang tìm:
 
-- **Cách chia đôi màn hình Xiaomi Redmi Pad SE 8.7** khi app hệ thống không hỗ trợ.
-- **Sửa lỗi Split Screen bị ẩn hoặc giới hạn trên HyperOS / MIUI 14**.
-- **Chạy 2–3 web/app song song trên Android tablet** mà không bị ngắt nhạc hay dừng video.
+- **Cách chia đôi màn hình trên máy tính bảng & điện thoại Android** khi app hệ thống giới hạn.
+- **Sửa lỗi Split Screen bị hạn chế trên Android tablet / màn hình gập**.
+- **Chạy 2–3 web/app song song trên Android** mà không bị ngắt nhạc hay dừng video.
 - **Bố cục 1:2** — một app chiếm trọn nửa màn hình, nửa còn lại chia đôi trên/dưới.
 - **Quản lý cặp ứng dụng (App Pairs)** để mở 2 app cùng lúc chỉ với 1 chạm.
 
@@ -81,16 +81,16 @@ Một app chiếm **trọn một nửa** màn hình, nửa còn lại chia thàn
 
 Menu và pop-up mở **ngay lập tức**, không còn độ trễ:
 
-- Danh sách app cài trên máy được **quét sẵn ở luồng nền** lúc khởi động; bộ chọn app mở ra tức thì với danh sách web app rồi tự điền thêm app native khi quét xong (trước đây phải chờ quét hết mọi package trên main thread).
-- **Icon app tải lười (lazy)** theo từng dòng và có cache — trước đây tải toàn bộ icon trước khi hiện dialog.
-- Chạm thanh chia mở menu **ngay khi nhấc tay**, không phải chờ hết khoảng thời gian nhận diện double-tap (~300ms).
-- Trang web **chỉ tải khi vào workspace**, không tải lúc còn ở màn hình chính; khung thứ ba chỉ tải khi bật bố cục 3 khung.
+- Danh sách app cài trên máy được **quét sẵn ở luồng nền** lúc khởi động; bộ chọn app mở ra tức thì với danh sách web app rồi tự điền thêm app native khi quét xong.
+- **Icon app tải lười (lazy)** theo từng dòng và có cache.
+- Chạm thanh chia mở menu **ngay khi nhấc tay**.
+- Trang web **chỉ tải khi vào workspace**, không tải lúc còn ở màn hình chính.
 
 ---
 
 ## 🛠️ Biên Dịch APK (`/android/`)
 
-Yêu cầu: **JDK 17** + **Android SDK 34** (hoặc Android Studio Hedgehog trở lên).
+Yêu cầu: **JDK 17** + **Android SDK 34** (hoặc Android Studio).
 
 ```bash
 cd android
@@ -98,7 +98,7 @@ chmod +x gradlew          # Linux / macOS
 ./gradlew assembleDebug   # Windows: .\gradlew.bat assembleDebug
 ```
 
-File APK: `android/app/build/outputs/apk/debug/app-debug.apk` — copy sang máy tính bảng và cài đặt.
+File APK: `android/app/build/outputs/apk/debug/app-debug.apk` — copy sang máy tính bảng / điện thoại Android và cài đặt.
 
 Chạy kiểm thử:
 
@@ -106,8 +106,6 @@ Chạy kiểm thử:
 cd android && ./gradlew testDebugUnitTest    # unit test
 python3 tools/verify_android.py              # kiểm tra tài nguyên & ID layout
 ```
-
-> GitHub Actions (`.github/workflows/ci.yml`) tự build APK, chạy unit test và lint trên mỗi lần push.
 
 ---
 
@@ -126,8 +124,6 @@ npm install
 npm test
 ```
 
-> ⚠️ **Lưu ý về iframe:** trình duyệt chặn nhúng các trang như Google, YouTube, Facebook (`X-Frame-Options`). Simulator sẽ hiện thông báo giải thích thay vì khung trắng. Trong app Android, các trang này chạy trong **WebView thật** nên không bị giới hạn đó. Các **trang demo** kèm sẵn (`simulator/pages/`) luôn hiển thị được để bạn thử toàn bộ thao tác chia màn hình.
-
 ---
 
 ## 📁 Cấu Trúc Dự Án
@@ -142,7 +138,7 @@ split-screen-pad/
 │       │   ├── WebPane.kt                 # Một khung web: điều hướng, UA, fullscreen
 │       │   ├── AppPickerDialog.kt         # Bộ chọn 2 bước (mở tức thì)
 │       │   ├── AppCatalog.kt              # Quét app nền + cache icon
-│       │   ├── NativeSplitLauncher.kt     # Mở 2 app hệ thống cạnh nhau
+│       │   ├── NativeSplitLauncher.kt     # Mở 2 app hệ thống song song (FLAG_ACTIVITY_LAUNCH_ADJACENT)
 │       │   ├── AppPair.kt / Prefs.kt      # Cặp ứng dụng & ghi nhớ phiên
 │       │   └── UrlUtils.kt                # Xử lý địa chỉ / tìm kiếm
 │       └── res/                    # Layout, drawable kính mờ, values + values-night
@@ -156,22 +152,16 @@ split-screen-pad/
 
 ---
 
-## ⚠️ Giới Hạn Thật Sự Của Android (nói rõ để không hiểu nhầm)
+## 📱 Khả Năng Chia Màn Hình Native & Web View
 
-Android **chỉ cho phép** một app mở app khác cạnh mình (`FLAG_ACTIVITY_LAUNCH_ADJACENT`) khi app đó **đã ở trong chế độ chia đôi màn hình**. Không có API công khai nào ép hệ thống chuyển từ toàn màn hình sang split.
-
-Vì vậy khi bạn chọn **2 app đã cài**:
-
-- Nếu Split Pad đang ở chế độ chia đôi → mở thẳng app thứ hai sang nửa còn lại.
-- Nếu không → app sẽ hỏi bạn chọn: **mở lần lượt cả hai app** (rồi kéo từ Recents sang nửa còn lại), hoặc **dùng bản web** của hai app đó, hiển thị song song ngay trong Split Pad.
-
-Các khung web bên trong Split Pad thì **luôn** chia được (2 hoặc 3 khung), không phụ thuộc hệ thống.
+- **Native App Split Launch**: Hỗ trợ mở 2 app native đã cài đặt side-by-side thông qua cờ hệ thống `FLAG_ACTIVITY_LAUNCH_ADJACENT | FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_MULTIPLE_TASK`.
+- **Dual Web Workspace**: Tích hợp trình duyệt đa khung (2 hoặc 3 pane) cho phép chạy mượt mà bất kỳ trang web / PWA nào song song mà không phụ thuộc vào giới hạn hệ điều hành.
 
 ---
 
 ## 🏷️ Keywords
 
-`Xiaomi Redmi Pad SE 8.7` `Split Screen Android 14` `HyperOS Multitasking` `MIUI Split Screen Fix` `Chia đôi màn hình Xiaomi` `Chia 3 màn hình Android` `Three app split screen` `Dual WebView Android App` `App Pair Manager Tablet` `Chạy 2 ứng dụng cùng lúc Redmi Pad` `Continuous Background Media` `1:2 split layout` `Desktop View User-Agent Switcher` `Material You Glassmorphism`
+`Android Split Screen` `Android Tablet Multitasking` `Foldable Multitasking` `Chia đôi màn hình Android` `Chia 3 màn hình Android` `Three app split screen` `Dual WebView Android App` `App Pair Manager Tablet` `Continuous Background Media` `1:2 split layout` `Desktop View User-Agent Switcher` `Material You Glassmorphism`
 
 ---
 
