@@ -21,6 +21,8 @@ import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.webkit.WebSettingsCompat
+import androidx.webkit.WebViewFeature
 
 /**
  * Everything one half of the split needs: the WebView, its address bar, the
@@ -91,6 +93,10 @@ class WebPane(
         setSupportMultipleWindows(false)
         mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
         cacheMode = WebSettings.LOAD_DEFAULT
+
+        if (WebViewFeature.isFeatureSupported(WebViewFeature.SAFE_BROWSING_ENABLE)) {
+            WebSettingsCompat.setSafeBrowsingEnabled(this, true)
+        }
 
         webView.isVerticalScrollBarEnabled = true
         webView.overScrollMode = View.OVER_SCROLL_IF_CONTENT_SCROLLS
