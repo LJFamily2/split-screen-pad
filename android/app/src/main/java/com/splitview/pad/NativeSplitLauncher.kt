@@ -1,6 +1,7 @@
 package com.splitview.pad
 
 import android.app.Activity
+import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Build
 import android.os.Handler
@@ -8,6 +9,10 @@ import android.os.Looper
 
 /**
  * Launching two *installed* native apps side by side using system multi-window flags.
+ *
+ * App 1 is launched as a new task taking the screen (adjacent = false),
+ * then App 2 is launched ADJACENT to App 1 (adjacent = true) after a short delay
+ * so Android's task manager splits the screen between App 1 and App 2.
  */
 object NativeSplitLauncher {
 
@@ -17,31 +22,46 @@ object NativeSplitLauncher {
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
 
     fun launchPair(activity: Activity, first: String, second: String): Result {
-        if (!launch(activity, first)) return Result.FAILED
+        // 1. Launch App 1 as a new task
+        if (!launch(activity, first, adjacent = false)) return Result.FAILED
 
+        // 2. Launch App 2 adjacent to App 1 after delay
         Handler(Looper.getMainLooper()).postDelayed({
-            launch(activity, second)
+            launch(activity, second, adjacent = true)
         }, LAUNCH_GAP_MS)
 
         return Result.LAUNCHED_ADJACENT
     }
 
     fun launchSingle(activity: Activity, packageName: String): Boolean =
-        launch(activity, packageName)
+        launch(activity, packageName, adjacent = false)
 
-    private fun launch(activity: Activity, packageName: String): Boolean {
+    private fun launch(activity: Activity, packageName: String, adjacent: Boolean): Boolean {
         val intent = activity.packageManager.getLaunchIntentForPackage(packageName) ?: return false
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            intent.addFlags(
-                Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT or
-                Intent.FLAG_ACTIVITY_NEW_TASK or
-                Intent.FLAG_ACTIVITY_MULTIPLE_TASK
-            )
-        } else {
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+        if (adjacent && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT)
         }
-        return runCatching { activity.startActivity(intent) }.isSuccess
+
+        var optionsBundle: android.os.Bundle? = null
+        if (adjacent && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            try {
+                val options = ActivityOptions.makeBasic()
+                optionsBundle = options.toBundle()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        return runCatching {
+            if (optionsBundle != null) {
+                activity.startActivity(intent, optionsBundle)
+            } else {
+                activity.startActivity(intent)
+            }
+        }.isSuccess
     }
 
-    private const val LAUNCH_GAP_MS = 800L
+    private const val LAUNCH_GAP_MS = 700L
 }
