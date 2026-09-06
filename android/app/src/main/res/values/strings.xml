@@ -45,9 +45,12 @@
     <string name="pos_left">Left</string>
     <string name="pos_right">Right</string>
     <string name="pos_left_half">Left half</string>
+    <string name="pos_right_half">Right half</string>
     <string name="pos_top_half">Top half</string>
+    <string name="pos_bottom_half">Bottom half</string>
     <string name="pos_top_right">Top right</string>
     <string name="pos_bottom_right">Bottom right</string>
+    <string name="pos_top_left">Top left</string>
     <string name="pos_bottom_left">Bottom left</string>
     <string name="menu_move_to">Move to %1$s</string>
     <string name="menu_add_pane">Add a third pane</string>
@@ -115,6 +118,16 @@
     <string name="system_split_msg">Android only lets an app open a second app side by side while it is already in split screen. Split Pad can open %1$s and %2$s one after the other — then drag the second one into the other half from Recents. Or open their web versions right here, side by side, with no extra steps.</string>
     <string name="system_split_open_both">Open both apps</string>
     <string name="system_split_use_web">Use web versions</string>
+
+    <!-- Native split step-by-step guide overlay -->
+    <string name="native_guide_title">How to open two apps side by side</string>
+    <string name="native_guide_subtitle">Android requires your device to already be in split-screen before a second app can open alongside it. Follow these steps:</string>
+    <string name="native_guide_step1">Tap “Open both apps” — %1$s will launch first.</string>
+    <string name="native_guide_step2">Hold the app’s title bar (or use the Recents key) and drag it to one side of the screen until the split-screen divider appears.</string>
+    <string name="native_guide_step3">%2$s will appear in the app picker. Tap it to fill the other half.</string>
+    <string name="native_guide_tip">Tip: You can also long-press an app in your Recents screen and choose “Split screen” on supported devices.</string>
+    <string name="native_guide_open">Open both apps</string>
+    <string name="native_guide_cancel">Cancel</string>
     <string name="pair_urls">%1$s + %2$s</string>
     <string name="hint_maximized">Full screen — drag the divider or press back to return</string>
     <string name="hint_stacked">Panes stacked top and bottom</string>

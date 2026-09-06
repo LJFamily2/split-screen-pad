@@ -41,6 +41,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnLayoutTwo: Button
     private lateinit var btnLayoutThree: Button
 
+    // Native split guide overlay views
+    private lateinit var nativeGuideOverlay: View
+    private lateinit var tvGuideStep1: TextView
+    private lateinit var tvGuideStep3: TextView
+
     private lateinit var split: SplitLayoutController
     private lateinit var panes: List<WebPane>
 
@@ -82,6 +87,11 @@ class MainActivity : AppCompatActivity() {
         hintToast = findViewById(R.id.tv_hint_toast)
         btnLayoutTwo = findViewById(R.id.btn_layout_two)
         btnLayoutThree = findViewById(R.id.btn_layout_three)
+
+        // Guide overlay
+        nativeGuideOverlay = findViewById(R.id.native_guide_overlay)
+        tvGuideStep1 = findViewById(R.id.tv_guide_step1)
+        tvGuideStep3 = findViewById(R.id.tv_guide_step3)
     }
 
     private fun setupPanes() {
@@ -216,6 +226,7 @@ class MainActivity : AppCompatActivity() {
             override fun handleOnBackPressed() {
                 val active = paneAt(activePane)
                 when {
+                    nativeGuideOverlay.visibility == View.VISIBLE -> hideNativeGuide()
                     panes.any { it.exitFullscreenIfNeeded() } -> Unit
                     split.maximizedPane != 0 -> split.restore()
                     active.canGoBack() -> active.goBack()
@@ -400,12 +411,14 @@ class MainActivity : AppCompatActivity() {
             split.paneCount == 2 ->
                 if (pane == 1) R.string.pos_left else R.string.pos_right
 
+            // 3-pane, portrait (pane 1 = top half; pane 2 = bottom-left; pane 3 = bottom-right)
             split.isVertical -> when (pane) {
                 1 -> R.string.pos_top_half
                 2 -> R.string.pos_bottom_left
                 else -> R.string.pos_bottom_right
             }
 
+            // 3-pane, landscape (pane 1 = left half; pane 2 = top-right; pane 3 = bottom-right)
             else -> when (pane) {
                 1 -> R.string.pos_left_half
                 2 -> R.string.pos_top_right
@@ -633,24 +646,44 @@ class MainActivity : AppCompatActivity() {
 
     /**
      * Two installed apps, but the system will not accept an adjacent launch from
-     * a full-screen app. Explain it once and let the user choose.
+     * a full-screen app.  Show a glass overlay that walks the user through the
+     * three steps they need to take to enter Android split-screen themselves.
      */
     private fun confirmSystemSplit(first: AppEntry, second: AppEntry) {
-        MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.system_split_title)
-            .setMessage(getString(R.string.system_split_msg, first.label, second.label))
-            .setPositiveButton(R.string.system_split_open_both) { _, _ ->
-                NativeSplitLauncher.launchPair(this, first.packageName!!, second.packageName!!)
-                showHint(getString(R.string.split_launch_hint))
-            }
-            .setNeutralButton(R.string.system_split_use_web) { _, _ ->
-                paneAt(1).load(first.url)
-                paneAt(2).load(second.url)
-                showSplitWorkspace(showHint = false)
-                split.restore()
-            }
-            .setNegativeButton(R.string.cancel, null)
-            .show()
+        showNativeGuide(first, second)
+    }
+
+    private fun showNativeGuide(first: AppEntry, second: AppEntry) {
+        tvGuideStep1.text = getString(R.string.native_guide_step1, first.label)
+        tvGuideStep3.text = getString(R.string.native_guide_step3, second.label)
+
+        nativeGuideOverlay.visibility = View.VISIBLE
+        nativeGuideOverlay.alpha = 0f
+        nativeGuideOverlay.animate()
+            .alpha(1f)
+            .setDuration(200)
+            .start()
+
+        nativeGuideOverlay.findViewById<Button>(R.id.btn_guide_cancel).setOnClickListener {
+            hideNativeGuide()
+        }
+
+        nativeGuideOverlay.findViewById<Button>(R.id.btn_guide_open).setOnClickListener {
+            hideNativeGuide()
+            NativeSplitLauncher.launchPair(this, first.packageName!!, second.packageName!!)
+            showHint(getString(R.string.split_launch_hint))
+        }
+
+        // Tap outside the card dismisses the overlay
+        nativeGuideOverlay.setOnClickListener { hideNativeGuide() }
+    }
+
+    private fun hideNativeGuide() {
+        nativeGuideOverlay.animate()
+            .alpha(0f)
+            .setDuration(160)
+            .withEndAction { nativeGuideOverlay.visibility = View.GONE }
+            .start()
     }
 
     // -------------------------------------------------------------- helpers
