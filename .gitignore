@@ -19,3 +19,8 @@ Thumbs.db
 # Build artifacts
 *.apk
 *.aab
+
+# Node / test tooling
+node_modules/
+npm-debug.log*
+test-results/

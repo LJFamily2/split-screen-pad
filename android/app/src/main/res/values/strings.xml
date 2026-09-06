@@ -1,15 +1,122 @@
 <resources>
     <string name="app_name">Split Screen Pad</string>
-    <string name="top_pane_hint">Enter URL for Pane 1...</string>
-    <string name="bottom_pane_hint">Enter URL for Pane 2...</string>
-    <string name="go">Go</string>
+
+    <!-- Home / mode picker -->
+    <string name="home_title">Split Pad</string>
+    <string name="home_subtitle">Two apps, one screen. Pick how you want to multitask.</string>
+    <string name="mode_dual_web_title">Dual browser split</string>
+    <string name="mode_dual_web_desc">Two independent web panes with a draggable divider</string>
+    <string name="mode_native_title">Split two installed apps</string>
+    <string name="mode_native_desc">Pick two apps and launch them into the system split view</string>
+    <string name="recent_pairs">Your app pairs</string>
+    <string name="no_pairs_yet">No pairs saved yet — open a split and tap ★ Save pair.</string>
+
+    <!-- Toolbar -->
+    <string name="action_home">Home</string>
+    <string name="action_swap">Swap</string>
+    <string name="action_rotate">Rotate</string>
+    <string name="action_apps">Apps</string>
+    <string name="action_save_pair">Save pair</string>
+    <string name="action_pairs">Pairs</string>
+    <string name="action_back">Back</string>
+    <string name="action_forward">Forward</string>
+    <string name="action_reload">Reload</string>
+    <string name="action_more">More options</string>
+
+    <!-- Panes -->
+    <string name="pane_1">Pane 1</string>
+    <string name="pane_2">Pane 2</string>
+    <string name="pane_1_hint">Search or type a web address</string>
+    <string name="pane_2_hint">Search or type a web address</string>
     <string name="desktop_mode">Desktop</string>
     <string name="mobile_mode">Mobile</string>
-    <string name="floating_overlay">Floating Mode</string>
-    <string name="save_app_pair">Save Pair</string>
-    <string name="saved_pairs">App Pairs</string>
-    <string name="orientation_toggle">Rotate Split</string>
-    <string name="overlay_permission_title">Display Over Other Apps</string>
-    <string name="overlay_permission_msg">Floating Overlay Mode allows you to keep a window open on top of native Android apps. Please grant overlay permission in system settings.</string>
-    <string name="grant_permission">Grant Permission</string>
+    <string name="pane_3">Pane 3</string>
+    <string name="pane_3_hint">Search or type a web address</string>
+
+    <!-- Layout switcher -->
+    <string name="layout_two">2 panes</string>
+    <string name="layout_three">3 panes</string>
+    <string name="layout_switched_two">Two panes</string>
+    <string name="layout_switched_three">Three panes: one half, plus two stacked</string>
+
+    <!-- Position names, used by the "move this pane" menu -->
+    <string name="pos_top">Top</string>
+    <string name="pos_bottom">Bottom</string>
+    <string name="pos_left">Left</string>
+    <string name="pos_right">Right</string>
+    <string name="pos_left_half">Left half</string>
+    <string name="pos_top_half">Top half</string>
+    <string name="pos_top_right">Top right</string>
+    <string name="pos_bottom_right">Bottom right</string>
+    <string name="pos_bottom_left">Bottom left</string>
+    <string name="menu_move_to">Move to %1$s</string>
+    <string name="menu_add_pane">Add a third pane</string>
+    <string name="menu_close_pane">Close this pane</string>
+    <string name="quick_two_panes">Use two panes</string>
+    <string name="quick_three_panes">Use three panes (one half + two stacked)</string>
+    <string name="pane_moved">Moved to %1$s</string>
+    <string name="pane_closed">Pane closed</string>
+
+    <string name="divider_hint">Drag to resize · tap for split options · hold for an even split</string>
+
+    <!-- Divider quick menu (Samsung-style) -->
+    <string name="quick_menu_title">Split options</string>
+    <string name="quick_swap">Swap the two panes</string>
+    <string name="quick_even">Even split (50:50)</string>
+    <string name="quick_max_1">Make the focused pane full screen</string>
+    <string name="quick_rotate">Rotate split direction</string>
+    <string name="quick_save_pair">Save this pair</string>
+
+    <!-- Pane overflow menu -->
+    <string name="menu_maximize">Full screen this pane</string>
+    <string name="menu_restore">Exit full screen</string>
+    <string name="menu_copy_url">Copy link</string>
+    <string name="menu_share">Share link</string>
+    <string name="menu_desktop_site">Toggle desktop site</string>
+    <string name="menu_open_browser">Open in system browser</string>
+
+    <!-- App picker -->
+    <string name="picker_step_1">Step 1 of 2</string>
+    <string name="picker_step_2">Step 2 of 2</string>
+    <string name="picker_title_1">Choose the first app</string>
+    <string name="picker_title_2">Choose the second app</string>
+    <string name="picker_subtitle_1">Pick what goes in Pane 1. Installed apps launch in the system split view; web apps open in a pane.</string>
+    <string name="picker_search_hint">Search apps and web apps</string>
+    <string name="picker_custom_url">Add a custom website or PWA</string>
+    <string name="picker_no_results">Nothing matched that search.</string>
+    <string name="picker_back">Back to step 1</string>
+    <string name="picker_subtitle_2">%1$s goes in Pane 1. Now pick what fills Pane 2.</string>
+    <string name="picker_custom_hint">example.com or https://…</string>
+    <string name="tag_app">APP</string>
+    <string name="tag_web">WEB</string>
+
+    <!-- Pairs -->
+    <string name="save_pair_title">Save app pair</string>
+    <string name="save_pair_msg">Give this pair a name so you can relaunch it in one tap.</string>
+    <string name="save_pair_hint">e.g. Research + Notes</string>
+    <string name="pairs_title">Your app pairs</string>
+    <string name="pair_launch">Launch</string>
+    <string name="pair_rename">Rename</string>
+    <string name="pair_delete">Delete</string>
+
+    <!-- Overlay -->
+
+    <!-- Misc feedback -->
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="save">Save</string>
+    <string name="close">Close</string>
+    <string name="panes_swapped">Panes swapped</string>
+    <string name="pair_saved">Pair saved</string>
+    <string name="pair_deleted">Pair deleted</string>
+    <string name="link_copied">Link copied</string>
+    <string name="split_launch_hint">Both apps launched. If the system did not split them, open Recents and drag the second app to the other half.</string>
+    <string name="system_split_title">Split two installed apps</string>
+    <string name="system_split_msg">Android only lets an app open a second app side by side while it is already in split screen. Split Pad can open %1$s and %2$s one after the other — then drag the second one into the other half from Recents. Or open their web versions right here, side by side, with no extra steps.</string>
+    <string name="system_split_open_both">Open both apps</string>
+    <string name="system_split_use_web">Use web versions</string>
+    <string name="pair_urls">%1$s + %2$s</string>
+    <string name="hint_maximized">Full screen — drag the divider or press back to return</string>
+    <string name="hint_stacked">Panes stacked top and bottom</string>
+    <string name="hint_side_by_side">Panes side by side</string>
 </resources>

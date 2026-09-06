@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark counterpart of values/colors.xml. Applied automatically when the
+         device is in dark mode. -->
+
+    <color name="bg_base">#080B14</color>
+    <color name="bg_mesh_1">#593B6BFF</color>
+    <color name="bg_mesh_2">#4D7C4DFF</color>
+    <color name="bg_mesh_3">#40007A8A</color>
+
+    <color name="glass_surface">#B31A2035</color>
+    <color name="glass_surface_strong">#E01A2035</color>
+    <color name="glass_surface_soft">#661A2035</color>
+    <color name="glass_stroke">#26FFFFFF</color>
+    <color name="glass_stroke_soft">#1FFFFFFF</color>
+    <color name="glass_shadow">#59000000</color>
+    <color name="scrim">#99000000</color>
+
+    <color name="text_primary">#F2F4FA</color>
+    <color name="text_secondary">#A8B0C4</color>
+    <color name="text_tertiary">#767E92</color>
+    <color name="text_on_accent">#0A0F1E</color>
+
+    <color name="accent">#7FA6FF</color>
+    <color name="accent_pressed">#A5C0FF</color>
+    <color name="accent_soft">#337FA6FF</color>
+    <color name="accent_secondary">#B79CFF</color>
+    <color name="pane_a">#7FA6FF</color>
+    <color name="pane_b">#5AD9D0</color>
+    <color name="danger">#FF6369</color>
+
+    <color name="divider_track">#1FFFFFFF</color>
+    <color name="divider_grip">#807FA6FF</color>
+    <color name="divider_grip_active">#FF7FA6FF</color>
+    <color name="border_subtle">#1FFFFFFF</color>
+</resources>

@@ -1,11 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="Theme.SplitScreenPad" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/accent_blue</item>
-        <item name="colorPrimaryVariant">@color/accent_indigo</item>
-        <item name="colorOnPrimary">@color/bg_dark</item>
-        <item name="android:statusBarColor">@color/bg_dark</item>
-        <item name="android:navigationBarColor">@color/bg_dark</item>
-        <item name="android:windowBackground">@color/bg_dark</item>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.SplitScreenPad" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/accent</item>
+        <item name="colorOnPrimary">@color/text_on_accent</item>
+        <item name="colorSecondary">@color/accent_secondary</item>
+        <item name="colorSurface">@color/glass_surface_strong</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="android:windowBackground">@drawable/bg_ambient_mesh</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="materialAlertDialogTheme">@style/Theme.SplitScreenPad.Dialog</item>
+        <item name="android:dialogTheme">@style/Theme.SplitScreenPad.Dialog</item>
+    </style>
+
+    <style name="Theme.SplitScreenPad.Dialog" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <item name="colorPrimary">@color/accent</item>
+        <item name="colorSurface">@color/glass_surface_strong</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="alertDialogStyle">@style/SplitPad.AlertDialog</item>
+    </style>
+
+    <style name="SplitPad.AlertDialog" parent="MaterialAlertDialog.Material3">
+        <item name="shapeAppearanceOverlay">@style/SplitPad.Shape.Dialog</item>
+    </style>
+
+    <style name="SplitPad.Shape.Dialog" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">26dp</item>
+    </style>
+
+    <!-- Toolbar / pane chip buttons -->
+    <style name="SplitPad.ToolButton" parent="Widget.Material3.Button.TextButton">
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">36dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:background">@drawable/bg_glass_chip</item>
+        <item name="backgroundTint">@null</item>
+    </style>
+
+    <style name="SplitPad.ToolButton.Accent">
+        <item name="android:textColor">@color/text_on_accent</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/bg_accent_pill</item>
+    </style>
+
+    <style name="SplitPad.IconButton" parent="">
+        <item name="android:layout_width">34dp</item>
+        <item name="android:layout_height">34dp</item>
+        <item name="android:padding">7dp</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:background">@drawable/bg_icon_button</item>
+        <item name="tint">@color/text_secondary</item>
+    </style>
+
+    <style name="SplitPad.Text.Title" parent="">
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="SplitPad.Text.Body" parent="">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">13sp</item>
     </style>
 </resources>
