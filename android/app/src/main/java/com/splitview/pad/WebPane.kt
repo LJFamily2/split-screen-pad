@@ -61,6 +61,10 @@ class WebPane(
     var isDesktopMode: Boolean = false
         private set
 
+    /** False until this pane has been asked to load something. */
+    var hasLoaded: Boolean = false
+        private set
+
     val currentUrl: String
         get() = webView.url ?: urlBar.text.toString()
 
@@ -214,6 +218,7 @@ class WebPane(
     }
 
     fun load(input: String) {
+        hasLoaded = true
         val url = UrlUtils.normalize(input)
         syncUrlBar(url)
         webView.loadUrl(url)

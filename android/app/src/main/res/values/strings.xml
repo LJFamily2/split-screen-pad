@@ -8,8 +8,6 @@
     <string name="mode_dual_web_desc">Two independent web panes with a draggable divider</string>
     <string name="mode_native_title">Split two installed apps</string>
     <string name="mode_native_desc">Pick two apps and launch them into the system split view</string>
-    <string name="mode_floating_title">Floating window</string>
-    <string name="mode_floating_desc">Keep a resizable browser on top of any other app</string>
     <string name="recent_pairs">Your app pairs</string>
     <string name="no_pairs_yet">No pairs saved yet — open a split and tap ★ Save pair.</string>
 
@@ -20,13 +18,10 @@
     <string name="action_apps">Apps</string>
     <string name="action_save_pair">Save pair</string>
     <string name="action_pairs">Pairs</string>
-    <string name="action_floating">Float</string>
     <string name="action_back">Back</string>
     <string name="action_forward">Forward</string>
     <string name="action_reload">Reload</string>
     <string name="action_more">More options</string>
-    <string name="action_close">Close</string>
-    <string name="action_minimize">Minimize</string>
 
     <!-- Panes -->
     <string name="pane_1">Pane 1</string>
@@ -35,24 +30,46 @@
     <string name="pane_2_hint">Search or type a web address</string>
     <string name="desktop_mode">Desktop</string>
     <string name="mobile_mode">Mobile</string>
-    <string name="divider_hint">Drag to resize · double-tap to swap · tap for options</string>
+    <string name="pane_3">Pane 3</string>
+    <string name="pane_3_hint">Search or type a web address</string>
+
+    <!-- Layout switcher -->
+    <string name="layout_two">2 panes</string>
+    <string name="layout_three">3 panes</string>
+    <string name="layout_switched_two">Two panes</string>
+    <string name="layout_switched_three">Three panes: one half, plus two stacked</string>
+
+    <!-- Position names, used by the "move this pane" menu -->
+    <string name="pos_top">Top</string>
+    <string name="pos_bottom">Bottom</string>
+    <string name="pos_left">Left</string>
+    <string name="pos_right">Right</string>
+    <string name="pos_left_half">Left half</string>
+    <string name="pos_top_half">Top half</string>
+    <string name="pos_top_right">Top right</string>
+    <string name="pos_bottom_right">Bottom right</string>
+    <string name="pos_bottom_left">Bottom left</string>
+    <string name="menu_move_to">Move to %1$s</string>
+    <string name="menu_add_pane">Add a third pane</string>
+    <string name="menu_close_pane">Close this pane</string>
+    <string name="quick_two_panes">Use two panes</string>
+    <string name="quick_three_panes">Use three panes (one half + two stacked)</string>
+    <string name="pane_moved">Moved to %1$s</string>
+    <string name="pane_closed">Pane closed</string>
+
+    <string name="divider_hint">Drag to resize · tap for split options · hold for an even split</string>
 
     <!-- Divider quick menu (Samsung-style) -->
     <string name="quick_menu_title">Split options</string>
     <string name="quick_swap">Swap the two panes</string>
     <string name="quick_even">Even split (50:50)</string>
-    <string name="quick_max_1">Make Pane 1 full screen</string>
-    <string name="quick_max_2">Make Pane 2 full screen</string>
-    <string name="quick_float_1">Send Pane 1 to a floating window</string>
-    <string name="quick_float_2">Send Pane 2 to a floating window</string>
+    <string name="quick_max_1">Make the focused pane full screen</string>
     <string name="quick_rotate">Rotate split direction</string>
     <string name="quick_save_pair">Save this pair</string>
 
     <!-- Pane overflow menu -->
     <string name="menu_maximize">Full screen this pane</string>
     <string name="menu_restore">Exit full screen</string>
-    <string name="menu_float">Open in floating window</string>
-    <string name="menu_send_other">Send to the other pane</string>
     <string name="menu_copy_url">Copy link</string>
     <string name="menu_share">Share link</string>
     <string name="menu_desktop_site">Toggle desktop site</string>
@@ -83,20 +100,8 @@
     <string name="pair_delete">Delete</string>
 
     <!-- Overlay -->
-    <string name="overlay_permission_title">Allow floating windows</string>
-    <string name="overlay_permission_msg">To keep a window on top of other apps, Split Pad needs the “Display over other apps” permission. Android will open the settings screen — find Split Screen Pad and turn it on.</string>
-    <string name="grant_permission">Open settings</string>
-    <string name="overlay_channel_name">Floating window</string>
-    <string name="overlay_notification_title">Floating window active</string>
-    <string name="overlay_notification_text">Tap to return to Split Pad</string>
-    <string name="overlay_started">Floating window opened — it stays on top of other apps</string>
-    <string name="overlay_needs_permission">Floating windows need permission first</string>
-    <string name="overlay_url_hint">Search or type a web address</string>
-    <string name="overlay_resize">Drag to resize</string>
-    <string name="overlay_opacity">Opacity</string>
 
     <!-- Misc feedback -->
-    <string name="go_label">Go</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="save">Save</string>
@@ -105,9 +110,7 @@
     <string name="pair_saved">Pair saved</string>
     <string name="pair_deleted">Pair deleted</string>
     <string name="link_copied">Link copied</string>
-    <string name="no_app_to_launch">That app could not be launched</string>
     <string name="split_launch_hint">Both apps launched. If the system did not split them, open Recents and drag the second app to the other half.</string>
-    <string name="system_split_unsupported">This device did not accept an adjacent launch — opening the apps one after another instead.</string>
     <string name="system_split_title">Split two installed apps</string>
     <string name="system_split_msg">Android only lets an app open a second app side by side while it is already in split screen. Split Pad can open %1$s and %2$s one after the other — then drag the second one into the other half from Recents. Or open their web versions right here, side by side, with no extra steps.</string>
     <string name="system_split_open_both">Open both apps</string>

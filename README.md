@@ -1,4 +1,4 @@
-# 📱 Split Screen Pad — Chia Đôi Màn Hình & Cửa Sổ Nổi Cho Xiaomi Redmi Pad SE 8.7
+# 📱 Split Screen Pad — Chia 2 & 3 Màn Hình Cho Xiaomi Redmi Pad SE 8.7
 
 ![Android 14](https://img.shields.io/badge/Android-14%20%2F%20HyperOS-3DDC84?style=for-the-badge&logo=android&logoColor=white)
 ![Platform](https://img.shields.io/badge/Target-Xiaomi%20Redmi%20Pad%20SE%208.7-FF6900?style=for-the-badge&logo=xiaomi&logoColor=white)
@@ -6,7 +6,8 @@
 ![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
 
 > 🚀 **Bộ công cụ đa nhiệm (multitasking) cho máy tính bảng Android — tối ưu cho Xiaomi Redmi Pad SE 8.7 (Android 14 / HyperOS).**
-> Gom những tính năng chia đôi màn hình tốt nhất của One UI (Samsung), HyperOS (Xiaomi) và iPadOS vào một app duy nhất.
+> Gom những tính năng chia màn hình tốt nhất của One UI (Samsung), HyperOS (Xiaomi) và iPadOS vào một app duy nhất.
+> Hỗ trợ **2 khung** hoặc **3 khung** (1 app chiếm trọn một nửa + 2 app xếp trên/dưới ở nửa còn lại).
 
 ---
 
@@ -16,8 +17,8 @@ Nếu bạn đang tìm:
 
 - **Cách chia đôi màn hình Xiaomi Redmi Pad SE 8.7** khi app hệ thống không hỗ trợ.
 - **Sửa lỗi Split Screen bị ẩn hoặc giới hạn trên HyperOS / MIUI 14**.
-- **Chạy 2 web/app song song trên Android tablet** mà không bị ngắt nhạc hay dừng video.
-- **Cửa sổ nổi (Floating Window Overlay)** đè lên mọi ứng dụng khác.
+- **Chạy 2–3 web/app song song trên Android tablet** mà không bị ngắt nhạc hay dừng video.
+- **Bố cục 1:2** — một app chiếm trọn nửa màn hình, nửa còn lại chia đôi trên/dưới.
 - **Quản lý cặp ứng dụng (App Pairs)** để mở 2 app cùng lúc chỉ với 1 chạm.
 
 **Split Screen Pad** gồm hai phần: **ứng dụng Android (Kotlin)** và **trình giả lập web (Web Simulator)** để xem trước giao diện ngay trên trình duyệt.
@@ -34,28 +35,29 @@ Nếu bạn đang tìm:
 | :--- | :--- |
 | **Kéo thanh chia** | Đổi tỷ lệ tự do, hiện % thời gian thực (VD `65 : 35`) |
 | **Kéo ra sát mép** | Đưa một khung thành **toàn màn hình** (như One UI) |
-| **Chạm 2 lần vào thanh chia** | **Hoán đổi** hai khung ngay lập tức |
-| **Chạm 1 lần vào thanh chia** | Mở **menu Split options** (swap · 50:50 · toàn màn hình · xoay · thả sang cửa sổ nổi · lưu cặp) |
+| **Chạm vào thanh chia** | Mở **menu Split options** ngay lập tức (swap · 50:50 · toàn màn hình · xoay · đổi 2↔3 khung · lưu cặp) |
 | **Giữ lâu thanh chia** | Về lại tỷ lệ đều 50:50 |
 | **Nút 1/3 · 1/2 · 2/3** | Tỷ lệ nhanh (snap ratio) |
 | **Nút Rotate** | Đổi giữa **trên/dưới** (portrait) và **trái/phải** (landscape) |
+| **Nút 2 panes / 3 panes** | Đổi giữa 2 khung và **bố cục 1:2** |
+
+### Bố cục 3 khung (1:2)
+
+Một app chiếm **trọn một nửa** màn hình, nửa còn lại chia thành **một khung trên và một khung dưới** — giống chế độ 3 app của One UI.
+
+- Có **thanh chia thứ hai** riêng cho cặp trên/dưới, kéo độc lập với thanh chia chính.
+- Menu **3 chấm (⋮)** ở đầu mỗi khung cho phép **đổi vị trí** nhanh: *Move to Left half · Move to Top right · Move to Bottom right*. Tên vị trí tự đổi theo hướng chia hiện tại.
+- **Add a third pane** / **Close this pane** ngay trong menu 3 chấm. Khi đóng một khung, hai khung còn lại tự dồn lên đúng vị trí.
+- Số khung, hai tỷ lệ chia và hướng chia đều **được nhớ lại**.
 
 ### Từng khung (per-pane)
 
 - Thanh địa chỉ riêng, gõ **tên miền → mở web**, gõ **từ khoá → tự tìm Google**.
 - **Back / Forward / Reload** riêng cho mỗi khung, có thanh tiến trình.
 - **Desktop / Mobile** riêng từng khung — một bên xem giao diện máy tính, một bên giao diện điện thoại.
-- Menu `⋮`: toàn màn hình · mở ra cửa sổ nổi · gửi sang khung kia · copy link · chia sẻ · mở bằng trình duyệt hệ thống.
+- Menu `⋮` ở đầu khung: toàn màn hình · đổi vị trí (Move to…) · thêm/đóng khung · Desktop/Mobile · copy link · chia sẻ · mở bằng trình duyệt hệ thống.
 - **Video toàn màn hình** (YouTube fullscreen) hoạt động trong khung.
 - **Nhạc / video không bị dừng** khi bạn thao tác ở khung còn lại.
-
-### Cửa sổ nổi (Floating window / Pop-up view)
-
-- Kéo thanh tiêu đề để di chuyển, **tự hít vào mép màn hình** (snap to edge).
-- **Kéo góc dưới để đổi kích thước**.
-- **Thu nhỏ thành bong bóng** (bubble), chạm để mở lại.
-- **Đổi độ trong suốt** (4 mức) để nhìn xuyên qua app bên dưới.
-- Vị trí, kích thước, độ trong suốt và địa chỉ **được nhớ lại sau khi khởi động lại**.
 
 ### Cặp ứng dụng (App Pairs)
 
@@ -70,10 +72,19 @@ Nếu bạn đang tìm:
 
 ### Ghi nhớ & giao diện
 
-- **Nhớ phiên làm việc**: hai địa chỉ, tỷ lệ chia, hướng chia, chế độ Desktop/Mobile.
+- **Nhớ phiên làm việc**: địa chỉ từng khung, số khung, hai tỷ lệ chia, hướng chia, chế độ Desktop/Mobile.
 - **Theo theme của máy**: sáng/tối tự động, và trên Android 12+ dùng **Material You** lấy màu nhấn từ hình nền.
 - Thiết kế **Glassmorphism**: bề mặt kính mờ, viền sáng, nền mesh gradient — tương phản chữ đủ cao để đọc thoải mái ở cả hai chế độ.
-- **Phím tắt** (khi gắn bàn phím): `Ctrl+1/2` chọn khung · `Ctrl+E` hoán đổi · `Ctrl+R` tải lại · `Ctrl+D` xoay · `Ctrl+M` toàn màn hình.
+- **Phím tắt** (khi gắn bàn phím): `Ctrl+1/2/3` chọn khung · `Ctrl+E` hoán đổi · `Ctrl+R` tải lại · `Ctrl+D` xoay · `Ctrl+M` toàn màn hình.
+
+### ⚡ Tối ưu tốc độ
+
+Menu và pop-up mở **ngay lập tức**, không còn độ trễ:
+
+- Danh sách app cài trên máy được **quét sẵn ở luồng nền** lúc khởi động; bộ chọn app mở ra tức thì với danh sách web app rồi tự điền thêm app native khi quét xong (trước đây phải chờ quét hết mọi package trên main thread).
+- **Icon app tải lười (lazy)** theo từng dòng và có cache — trước đây tải toàn bộ icon trước khi hiện dialog.
+- Chạm thanh chia mở menu **ngay khi nhấc tay**, không phải chờ hết khoảng thời gian nhận diện double-tap (~300ms).
+- Trang web **chỉ tải khi vào workspace**, không tải lúc còn ở màn hình chính; khung thứ ba chỉ tải khi bật bố cục 3 khung.
 
 ---
 
@@ -100,21 +111,13 @@ python3 tools/verify_android.py              # kiểm tra tài nguyên & ID layo
 
 ---
 
-## ⚙️ Cấp Quyền Cửa Sổ Nổi (HyperOS / MIUI)
-
-1. Mở app, chọn **Floating window** (hoặc nút **⧉ Float** trên thanh công cụ).
-2. Chạm **Open settings** → Android mở thẳng mục **Hiển thị trên các ứng dụng khác**.
-3. Tìm **Split Screen Pad** và **BẬT**.
-
----
-
 ## 🌐 Trình Giả Lập Web (`/simulator/`)
 
 ```bash
 npm run serve      # rồi mở http://localhost:8080
 ```
 
-Simulator mô phỏng đầy đủ thao tác của app: kéo thanh chia (hỗ trợ **cả chuột và cảm ứng**), tỷ lệ nhanh, hoán đổi, xoay, toàn màn hình, cửa sổ nổi, cặp ứng dụng, dock cạnh màn hình và chuyển theme sáng/tối.
+Simulator mô phỏng đầy đủ thao tác của app: kéo thanh chia (hỗ trợ **cả chuột và cảm ứng**), tỷ lệ nhanh, hoán đổi, xoay, toàn màn hình, **bố cục 2 và 3 khung**, menu 3 chấm đổi vị trí, cặp ứng dụng, dock cạnh màn hình và chuyển theme sáng/tối.
 
 Chạy kiểm thử trình duyệt (Playwright + Chromium):
 
@@ -134,12 +137,11 @@ split-screen-pad/
 ├── android/                        # Ứng dụng Android (Kotlin)
 │   └── app/src/main/
 │       ├── java/com/splitview/pad/
-│       │   ├── MainActivity.kt            # Màn hình chính + workspace chia đôi
-│       │   ├── SplitLayoutController.kt   # Tỷ lệ, hướng chia, cử chỉ thanh chia
+│       │   ├── MainActivity.kt            # Màn hình chính + workspace chia khung
+│       │   ├── SplitLayoutController.kt   # 2/3 khung, tỷ lệ, hướng chia, cử chỉ
 │       │   ├── WebPane.kt                 # Một khung web: điều hướng, UA, fullscreen
-│       │   ├── FloatingOverlayService.kt  # Cửa sổ nổi (kéo/resize/bubble/opacity)
-│       │   ├── AppPickerDialog.kt         # Bộ chọn 2 bước
-│       │   ├── AppCatalog.kt              # Danh sách app + web tương đương
+│       │   ├── AppPickerDialog.kt         # Bộ chọn 2 bước (mở tức thì)
+│       │   ├── AppCatalog.kt              # Quét app nền + cache icon
 │       │   ├── NativeSplitLauncher.kt     # Mở 2 app hệ thống cạnh nhau
 │       │   ├── AppPair.kt / Prefs.kt      # Cặp ứng dụng & ghi nhớ phiên
 │       │   └── UrlUtils.kt                # Xử lý địa chỉ / tìm kiếm
@@ -163,13 +165,13 @@ Vì vậy khi bạn chọn **2 app đã cài**:
 - Nếu Split Pad đang ở chế độ chia đôi → mở thẳng app thứ hai sang nửa còn lại.
 - Nếu không → app sẽ hỏi bạn chọn: **mở lần lượt cả hai app** (rồi kéo từ Recents sang nửa còn lại), hoặc **dùng bản web** của hai app đó, hiển thị song song ngay trong Split Pad.
 
-Hai khung web bên trong Split Pad thì **luôn** chia đôi được, không phụ thuộc hệ thống.
+Các khung web bên trong Split Pad thì **luôn** chia được (2 hoặc 3 khung), không phụ thuộc hệ thống.
 
 ---
 
 ## 🏷️ Keywords
 
-`Xiaomi Redmi Pad SE 8.7` `Split Screen Android 14` `HyperOS Multitasking` `MIUI Split Screen Fix` `Chia đôi màn hình Xiaomi` `Cửa sổ nổi HyperOS` `Floating Browser Overlay` `Dual WebView Android App` `App Pair Manager Tablet` `Chạy 2 ứng dụng cùng lúc Redmi Pad` `Continuous Background Media` `Desktop View User-Agent Switcher` `Material You Glassmorphism`
+`Xiaomi Redmi Pad SE 8.7` `Split Screen Android 14` `HyperOS Multitasking` `MIUI Split Screen Fix` `Chia đôi màn hình Xiaomi` `Chia 3 màn hình Android` `Three app split screen` `Dual WebView Android App` `App Pair Manager Tablet` `Chạy 2 ứng dụng cùng lúc Redmi Pad` `Continuous Background Media` `1:2 split layout` `Desktop View User-Agent Switcher` `Material You Glassmorphism`
 
 ---
 

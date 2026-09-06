@@ -1,20 +1,24 @@
 /* =============================================================================
    Split Pad simulator
-   Mirrors the Android app: ratio presets, a draggable divider with drag-to-edge
-   full screen, double-tap swap, rotate, per-pane navigation and desktop mode,
-   saved app pairs, a two-step app picker, and a floating window that can be
-   dragged, resized and minimised to a bubble.
+
+   Mirrors the Android app: two- or three-pane layouts, ratio presets, draggable
+   dividers with drag-to-edge full screen, rotate, per-pane navigation and
+   desktop mode, a panel menu that moves panes between slots, saved app pairs
+   and a two-step app picker.
+
+   Layouts
+     2 panes   pane 1 | pane 2
+     3 panes   pane 1 | (pane 2 over pane 3)
 
    Everything uses Pointer Events, so the same code path serves mouse, touch and
-   pen — the previous build was mouse-only and did nothing on a tablet.
+   pen. Menus open on pointer-up with no double-tap window to wait out.
    ============================================================================= */
 (() => {
   'use strict';
 
   const MIN_RATIO = 0.15;
   const MAX_RATIO = 0.85;
-  const EDGE_SNAP = 0.18;
-  const DOUBLE_TAP_MS = 280;
+  const EDGE_SNAP = 0.03;
   const STORE = {
     pairs: 'splitpad.pairs',
     session: 'splitpad.session',
@@ -127,7 +131,7 @@
     el.textContent = message;
     el.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2000);
   }
 
   /* ----------------------------------------------------------------- theme */
@@ -141,11 +145,8 @@
   };
 
   function applyTheme(mode) {
-    if (mode === 'auto') {
-      document.documentElement.removeAttribute('data-theme');
-    } else {
-      document.documentElement.setAttribute('data-theme', mode);
-    }
+    if (mode === 'auto') document.documentElement.removeAttribute('data-theme');
+    else document.documentElement.setAttribute('data-theme', mode);
     themeButton.textContent = THEME_LABEL[mode].icon;
     themeButton.title = THEME_LABEL[mode].text;
     store.write(STORE.theme, mode);
@@ -164,13 +165,11 @@
   /* ------------------------------------------------------------------ panes */
 
   const splitEl = $('split');
-  const dividerEl = $('divider');
-  const ratioTip = $('ratio-tip');
+  const secondaryGroup = $('secondary-group');
+  const dividers = { primary: $('divider'), secondary: $('divider-2') };
+  const tips = { primary: $('ratio-tip'), secondary: $('ratio-tip-2') };
 
-  const panes = {
-    1: makePane(1),
-    2: makePane(2)
-  };
+  const panes = { 1: makePane(1), 2: makePane(2), 3: makePane(3) };
 
   function makePane(id) {
     return {
@@ -185,6 +184,7 @@
       blockText: $(`block-text-${id}`),
       url: '',
       desktop: false,
+      loaded: false,
       history: [],
       historyIndex: -1
     };
@@ -192,20 +192,21 @@
 
   const state = {
     ratio: 0.5,
+    secondaryRatio: 0.5,
     vertical: true,
+    paneCount: 2,
     maximized: 0,
-    active: 1,
-    floating: { url: 'pages/reader.html', alphaStep: 0, minimized: false }
+    active: 1
   };
 
   function saveSession() {
     store.write(STORE.session, {
-      p1: panes[1].url,
-      p2: panes[2].url,
+      urls: [panes[1].url, panes[2].url, panes[3].url],
+      desktop: [panes[1].desktop, panes[2].desktop, panes[3].desktop],
       ratio: state.ratio,
+      secondaryRatio: state.secondaryRatio,
       vertical: state.vertical,
-      d1: panes[1].desktop,
-      d2: panes[2].desktop
+      paneCount: state.paneCount
     });
   }
 
@@ -213,6 +214,7 @@
     const pane = panes[id];
     const url = normalizeUrl(rawUrl);
     pane.url = url;
+    pane.loaded = true;
     pane.urlField.value = isLocalPage(url) ? hostOf(url) : prettyUrl(url);
 
     if (isFrameBlocked(url)) {
@@ -251,19 +253,17 @@
     setTimeout(() => {
       pane.progress.classList.remove('loading');
       pane.progress.style.width = '0%';
-    }, 260);
+    }, 240);
   }
 
-  [1, 2].forEach((id) => {
+  [1, 2, 3].forEach((id) => {
     const pane = panes[id];
     pane.frame.addEventListener('load', () => finishProgress(pane));
-
     pane.urlField.addEventListener('keydown', (event) => {
       if (event.key === 'Enter') loadPane(id, pane.urlField.value);
     });
     pane.urlField.addEventListener('focus', () => setActivePane(id));
     pane.root.addEventListener('pointerdown', () => setActivePane(id));
-
     pane.uaButton.addEventListener('click', () => setDesktopMode(id, !pane.desktop));
   });
 
@@ -291,8 +291,7 @@
 
   qsa('[data-open-tab]').forEach((el) => {
     el.addEventListener('click', () => {
-      const pane = panes[Number(el.dataset.openTab)];
-      window.open(pane.url, '_blank', 'noopener');
+      window.open(panes[Number(el.dataset.openTab)].url, '_blank', 'noopener');
     });
   });
 
@@ -310,8 +309,7 @@
 
   function setActivePane(id) {
     state.active = id;
-    panes[1].root.classList.toggle('active', id === 1);
-    panes[2].root.classList.toggle('active', id === 2);
+    [1, 2, 3].forEach((n) => panes[n].root.classList.toggle('active', n === id));
   }
 
   function setDesktopMode(id, desktop) {
@@ -326,50 +324,87 @@
     pane.frame.style.transformOrigin = 'top left';
     if (desktop) {
       const rect = pane.frame.parentElement.getBoundingClientRect();
-      const scale = Math.max(rect.width / 1280, 0.2);
-      pane.frame.style.transform = `scale(${scale})`;
+      pane.frame.style.transform = `scale(${Math.max(rect.width / 1280, 0.2)})`;
     } else {
       pane.frame.style.transform = '';
     }
     saveSession();
   }
 
+  let rescaleQueued = false;
   function rescaleDesktopFrames() {
-    [1, 2].forEach((id) => { if (panes[id].desktop) setDesktopMode(id, true); });
+    // Coalesced into one frame: resizing fired this dozens of times a second.
+    if (rescaleQueued) return;
+    rescaleQueued = true;
+    requestAnimationFrame(() => {
+      rescaleQueued = false;
+      [1, 2, 3].forEach((id) => { if (panes[id].desktop) setDesktopMode(id, true); });
+    });
   }
 
   /* ------------------------------------------------------------------ split */
 
+  function applyLayout() {
+    const three = state.paneCount === 3;
+    const max = state.maximized;
+
+    panes[1].root.classList.toggle('hidden-pane', max !== 0 && max !== 1);
+    panes[2].root.classList.toggle('hidden-pane', max !== 0 && max !== 2);
+    panes[3].root.classList.toggle('hidden-pane', !three || (max !== 0 && max !== 3));
+
+    secondaryGroup.classList.toggle('hidden-pane', max === 1);
+    dividers.secondary.classList.toggle('hidden-pane', !three);
+
+    if (max === 1) {
+      panes[1].root.style.flex = '1 1 0%';
+    } else if (max === 2 || max === 3) {
+      secondaryGroup.style.flex = '1 1 0%';
+      panes[max].root.style.flex = '1 1 0%';
+    } else {
+      panes[1].root.style.flex = `${state.ratio} 1 0%`;
+      secondaryGroup.style.flex = `${1 - state.ratio} 1 0%`;
+      panes[2].root.style.flex = three ? `${state.secondaryRatio} 1 0%` : '1 1 0%';
+      panes[3].root.style.flex = three ? `${1 - state.secondaryRatio} 1 0%` : '0 1 0%';
+    }
+
+    const left = Math.round(state.ratio * 100);
+    tips.primary.textContent = `${left} : ${100 - left}`;
+    const upper = Math.round(state.secondaryRatio * 100);
+    tips.secondary.textContent = `${upper} : ${100 - upper}`;
+
+    rescaleDesktopFrames();
+  }
+
   function applyRatio(ratio, { persist = true } = {}) {
     if (state.maximized !== 0) restorePanes();
     state.ratio = Math.min(MAX_RATIO, Math.max(MIN_RATIO, ratio));
-    panes[1].root.style.flex = `${state.ratio} 1 0%`;
-    panes[2].root.style.flex = `${1 - state.ratio} 1 0%`;
-    const left = Math.round(state.ratio * 100);
-    ratioTip.textContent = `${left} : ${100 - left}`;
+    applyLayout();
     if (persist) saveSession();
-    rescaleDesktopFrames();
+  }
+
+  function applySecondaryRatio(ratio, { persist = true } = {}) {
+    if (state.maximized !== 0) restorePanes();
+    state.secondaryRatio = Math.min(MAX_RATIO, Math.max(MIN_RATIO, ratio));
+    applyLayout();
+    if (persist) saveSession();
   }
 
   function maximizePane(id) {
     if (state.ratio <= MIN_RATIO + 0.02 || state.ratio >= MAX_RATIO - 0.02) state.ratio = 0.5;
+    if (state.secondaryRatio <= MIN_RATIO + 0.02 || state.secondaryRatio >= MAX_RATIO - 0.02) {
+      state.secondaryRatio = 0.5;
+    }
     state.maximized = id;
-    panes[1].root.classList.toggle('hidden-pane', id !== 1);
-    panes[2].root.classList.toggle('hidden-pane', id !== 2);
-    panes[id].root.style.flex = '1 1 0%';
+    applyLayout();
     setActivePane(id);
+    saveSession();
     toast('Full screen — drag the divider or press Escape to return');
-    rescaleDesktopFrames();
   }
 
   function restorePanes() {
     if (state.maximized === 0) return;
     state.maximized = 0;
-    panes[1].root.classList.remove('hidden-pane');
-    panes[2].root.classList.remove('hidden-pane');
-    panes[1].root.style.flex = `${state.ratio} 1 0%`;
-    panes[2].root.style.flex = `${1 - state.ratio} 1 0%`;
-    rescaleDesktopFrames();
+    applyLayout();
   }
 
   function toggleMaximize(id) {
@@ -380,101 +415,151 @@
     state.vertical = vertical;
     splitEl.classList.toggle('vertical', vertical);
     splitEl.classList.toggle('horizontal', !vertical);
+    applyLayout();
     saveSession();
-    rescaleDesktopFrames();
   }
 
-  function swapPanes() {
-    const a = panes[1].url;
-    const b = panes[2].url;
-    const da = panes[1].desktop;
-    const db = panes[2].desktop;
-    loadPane(1, b);
-    loadPane(2, a);
-    setDesktopMode(1, db);
-    setDesktopMode(2, da);
-    toast('Panes swapped');
+  function setPaneCount(count) {
+    if (count === 3 && state.paneCount !== 3) {
+      // Three panes read as "one full half, plus two stacked", which needs the
+      // primary split to run left/right.
+      setDirection(false);
+    }
+    state.paneCount = count;
+    if (state.maximized > count) state.maximized = 0;
+    if (count === 3 && !panes[3].loaded) loadPane(3, 'pages/reader.html');
+    applyLayout();
+    updateLayoutButtons();
+    saveSession();
+    toast(count === 3 ? 'Three panes: one half, plus two stacked' : 'Two panes');
+  }
+
+  function updateLayoutButtons() {
+    $('btn-layout-2').classList.toggle('active', state.paneCount === 2);
+    $('btn-layout-3').classList.toggle('active', state.paneCount === 3);
+  }
+
+  /** Exchanges what two panes are showing, keeping each pane's own chrome. */
+  function swapPanes(a, b) {
+    if (a === b || a > state.paneCount || b > state.paneCount) return;
+    const urlA = panes[a].url;
+    const urlB = panes[b].url;
+    const deskA = panes[a].desktop;
+    const deskB = panes[b].desktop;
+    loadPane(a, urlB);
+    loadPane(b, urlA);
+    setDesktopMode(a, deskB);
+    setDesktopMode(b, deskA);
+  }
+
+  /** Human name for a slot, which depends on the current layout. */
+  function positionName(id) {
+    if (state.paneCount === 2) {
+      if (state.vertical) return id === 1 ? 'Top' : 'Bottom';
+      return id === 1 ? 'Left' : 'Right';
+    }
+    if (state.vertical) return ['Top half', 'Bottom left', 'Bottom right'][id - 1];
+    return ['Left half', 'Top right', 'Bottom right'][id - 1];
+  }
+
+  function closePane(id) {
+    if (state.paneCount !== 3) return;
+    // Shuffle the survivors up so the remaining two keep the expected slots.
+    if (id === 1) { swapPanes(1, 2); swapPanes(2, 3); } else if (id === 2) { swapPanes(2, 3); }
+    setPaneCount(2);
+    setActivePane(id === 1 ? 1 : Math.min(id, 2));
   }
 
   /* --------------------------------------------------- divider interaction */
 
-  let dragging = false;
-  let dragStartPos = 0;
-  let dragStartRatio = 0.5;
-  let moved = false;
-  let lastTapTime = 0;
+  function wireDivider(divider, which) {
+    let dragging = false;
+    let startPos = 0;
+    let startRatio = 0.5;
+    let moved = false;
 
-  dividerEl.addEventListener('pointerdown', (event) => {
-    dragging = true;
-    moved = false;
-    dragStartPos = state.vertical ? event.clientY : event.clientX;
-    dragStartRatio = state.ratio;
-    dividerEl.setPointerCapture(event.pointerId);
-    dividerEl.classList.add('dragging');
-  });
+    const isPrimary = which === 'primary';
+    // The primary divider follows the main axis; the secondary runs across it.
+    const alongVertical = () => (isPrimary ? state.vertical : !state.vertical);
 
-  dividerEl.addEventListener('pointermove', (event) => {
-    if (!dragging) return;
-    const pos = state.vertical ? event.clientY : event.clientX;
-    if (!moved && Math.abs(pos - dragStartPos) > 4) {
-      moved = true;
-      if (state.maximized !== 0) {
-        restorePanes();
-        dragStartRatio = state.ratio;
-        dragStartPos = pos;
+    divider.addEventListener('pointerdown', (event) => {
+      dragging = true;
+      moved = false;
+      startPos = alongVertical() ? event.clientY : event.clientX;
+      startRatio = isPrimary ? state.ratio : state.secondaryRatio;
+      divider.setPointerCapture(event.pointerId);
+      divider.classList.add('dragging');
+    });
+
+    divider.addEventListener('pointermove', (event) => {
+      if (!dragging) return;
+      const pos = alongVertical() ? event.clientY : event.clientX;
+      if (!moved && Math.abs(pos - startPos) > 4) {
+        moved = true;
+        if (state.maximized !== 0) {
+          restorePanes();
+          startRatio = isPrimary ? state.ratio : state.secondaryRatio;
+          startPos = pos;
+        }
+      }
+      if (!moved) return;
+      const host = (isPrimary ? splitEl : secondaryGroup).getBoundingClientRect();
+      const span = alongVertical() ? host.height : host.width;
+      const thickness = alongVertical() ? divider.offsetHeight : divider.offsetWidth;
+      const total = span - thickness;
+      if (total <= 0) return;
+      const next = startRatio + (pos - startPos) / total;
+      if (isPrimary) applyRatio(next, { persist: false });
+      else applySecondaryRatio(next, { persist: false });
+    });
+
+    function end(event) {
+      if (!dragging) return;
+      dragging = false;
+      divider.classList.remove('dragging');
+      if (event && divider.hasPointerCapture?.(event.pointerId)) {
+        divider.releasePointerCapture(event.pointerId);
+      }
+
+      if (!moved) {
+        // A tap. The sheet opens right here on pointer-up — there is no
+        // double-tap window to wait out, so it feels immediate.
+        showSplitOptions();
+        return;
+      }
+
+      if (isPrimary) {
+        if (state.ratio <= MIN_RATIO + EDGE_SNAP && state.paneCount === 2) maximizePane(2);
+        else if (state.ratio >= MAX_RATIO - EDGE_SNAP) maximizePane(1);
+        else saveSession();
+      } else if (state.secondaryRatio <= MIN_RATIO + EDGE_SNAP) {
+        maximizePane(3);
+      } else if (state.secondaryRatio >= MAX_RATIO - EDGE_SNAP) {
+        maximizePane(2);
+      } else {
+        saveSession();
       }
     }
-    if (!moved) return;
-    const rect = splitEl.getBoundingClientRect();
-    const dividerSize = state.vertical ? dividerEl.offsetHeight : dividerEl.offsetWidth;
-    const total = (state.vertical ? rect.height : rect.width) - dividerSize;
-    if (total > 0) applyRatio(dragStartRatio + (pos - dragStartPos) / total, { persist: false });
-  });
 
-  function endDividerDrag(event) {
-    if (!dragging) return;
-    dragging = false;
-    dividerEl.classList.remove('dragging');
-    if (event && dividerEl.hasPointerCapture?.(event.pointerId)) {
-      dividerEl.releasePointerCapture(event.pointerId);
-    }
+    divider.addEventListener('pointerup', end);
+    divider.addEventListener('pointercancel', end);
 
-    if (moved) {
-      lastTapTime = 0;
-      if (state.ratio <= MIN_RATIO + EDGE_SNAP - 0.03) maximizePane(2);
-      else if (state.ratio >= MAX_RATIO - EDGE_SNAP + 0.03) maximizePane(1);
-      else saveSession();
-      return;
-    }
-
-    // No movement: a tap. Two taps in quick succession swap the panes.
-    const now = Date.now();
-    if (now - lastTapTime < DOUBLE_TAP_MS) {
-      lastTapTime = 0;
-      swapPanes();
-    } else {
-      lastTapTime = now;
-      setTimeout(() => {
-        if (lastTapTime && Date.now() - lastTapTime >= DOUBLE_TAP_MS - 20) {
-          lastTapTime = 0;
-          showSplitOptions();
-        }
-      }, DOUBLE_TAP_MS);
-    }
+    divider.addEventListener('keydown', (event) => {
+      const step = isPrimary ? applyRatio : applySecondaryRatio;
+      const current = isPrimary ? state.ratio : state.secondaryRatio;
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        showSplitOptions();
+      } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
+        step(current - 0.05);
+      } else if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
+        step(current + 0.05);
+      }
+    });
   }
 
-  dividerEl.addEventListener('pointerup', endDividerDrag);
-  dividerEl.addEventListener('pointercancel', endDividerDrag);
-  dividerEl.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      showSplitOptions();
-    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
-      applyRatio(state.ratio - 0.05);
-    } else if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
-      applyRatio(state.ratio + 0.05);
-    }
-  });
+  wireDivider(dividers.primary, 'primary');
+  wireDivider(dividers.secondary, 'secondary');
 
   /* --------------------------------------------------------------- toolbar */
 
@@ -485,7 +570,10 @@
     });
   });
 
-  $('btn-swap').addEventListener('click', swapPanes);
+  $('btn-swap').addEventListener('click', () => {
+    swapPanes(1, 2);
+    toast('Panes swapped');
+  });
   $('btn-rotate').addEventListener('click', () => {
     setDirection(!state.vertical);
     toast(state.vertical ? 'Panes stacked top and bottom' : 'Panes side by side');
@@ -493,8 +581,9 @@
   $('btn-apps').addEventListener('click', () => openPicker());
   $('btn-save-pair').addEventListener('click', promptSavePair);
   $('btn-pairs').addEventListener('click', openPairs);
-  $('btn-floating').addEventListener('click', () => openFloating(state.floating.url));
   $('btn-help').addEventListener('click', showShortcuts);
+  $('btn-layout-2').addEventListener('click', () => setPaneCount(2));
+  $('btn-layout-3').addEventListener('click', () => setPaneCount(3));
 
   /* ------------------------------------------------------------------ dock */
 
@@ -517,7 +606,7 @@
   dockItems.appendChild(dockDivider);
 
   [
-    { icon: '⇄', title: 'Swap panes', run: swapPanes },
+    { icon: '⇄', title: 'Swap panes', run: () => { swapPanes(1, 2); toast('Panes swapped'); } },
     { icon: '▦', title: 'Pick two apps', run: () => openPicker() }
   ].forEach((action) => {
     const item = document.createElement('button');
@@ -544,52 +633,77 @@
     });
   });
 
+  const actionList = $('action-list');
+
   function showActions(title, actions) {
     $('action-title').textContent = title;
-    const list = $('action-list');
-    list.innerHTML = '';
+    // One fragment, one reflow, rather than appending row by row.
+    const fragment = document.createDocumentFragment();
     actions.forEach((action) => {
       const row = document.createElement('button');
       row.type = 'button';
       row.className = 'action-row';
-      row.innerHTML = `<span class="ar-icon"></span><span class="ar-label"></span>`;
+      row.innerHTML = '<span class="ar-icon"></span><span class="ar-label"></span>';
       row.querySelector('.ar-icon').textContent = action.icon;
       row.querySelector('.ar-label').textContent = action.label;
       row.addEventListener('click', () => {
         closeModal('action-modal');
         action.run();
       });
-      list.appendChild(row);
+      fragment.appendChild(row);
     });
+    actionList.replaceChildren(fragment);
     openModal('action-modal');
   }
 
   function showSplitOptions() {
-    showActions('Split options', [
-      { icon: '⇄', label: 'Swap the two panes', run: swapPanes },
-      { icon: '▤', label: 'Even split (50:50)', run: () => applyRatio(0.5) },
-      { icon: '⬒', label: 'Make Pane 1 full screen', run: () => toggleMaximize(1) },
-      { icon: '⬓', label: 'Make Pane 2 full screen', run: () => toggleMaximize(2) },
+    const actions = [
+      { icon: '⇄', label: 'Swap the two panes', run: () => { swapPanes(1, 2); toast('Panes swapped'); } },
+      {
+        icon: '▤',
+        label: 'Even split',
+        run: () => { applyRatio(0.5); applySecondaryRatio(0.5); }
+      },
+      { icon: '⬒', label: 'Full screen the focused pane', run: () => toggleMaximize(state.active) },
       { icon: '⟲', label: 'Rotate split direction', run: () => setDirection(!state.vertical) },
-      { icon: '⧉', label: 'Send Pane 2 to a floating window', run: () => openFloating(panes[2].url) },
+      state.paneCount === 2
+        ? { icon: '▥', label: 'Use three panes (one half + two stacked)', run: () => setPaneCount(3) }
+        : { icon: '▤', label: 'Use two panes', run: () => setPaneCount(2) },
       { icon: '★', label: 'Save this pair', run: promptSavePair }
-    ]);
+    ];
+    showActions('Split options', actions);
   }
 
   function showPaneMenu(id) {
     const pane = panes[id];
-    showActions(`Pane ${id}`, [
+    const actions = [
       {
         icon: '⬒',
         label: state.maximized === id ? 'Exit full screen' : 'Full screen this pane',
         run: () => toggleMaximize(id)
-      },
-      { icon: '⧉', label: 'Open in floating window', run: () => openFloating(pane.url) },
-      {
+      }
+    ];
+
+    for (let target = 1; target <= state.paneCount; target += 1) {
+      if (target === id) continue;
+      actions.push({
         icon: '⇄',
-        label: 'Send to the other pane',
-        run: () => loadPane(id === 1 ? 2 : 1, pane.url)
-      },
+        label: `Move to ${positionName(target)}`,
+        run: () => {
+          swapPanes(id, target);
+          setActivePane(target);
+          toast(`Moved to ${positionName(target)}`);
+        }
+      });
+    }
+
+    actions.push(
+      state.paneCount === 2
+        ? { icon: '▥', label: 'Add a third pane', run: () => setPaneCount(3) }
+        : { icon: '✕', label: 'Close this pane', run: () => closePane(id) }
+    );
+
+    actions.push(
       {
         icon: pane.desktop ? '📱' : '🖥',
         label: pane.desktop ? 'Use the mobile site' : 'Use the desktop site',
@@ -598,27 +712,31 @@
       {
         icon: '⧉',
         label: 'Copy link',
-        run: () => {
-          navigator.clipboard?.writeText(pane.url);
-          toast('Link copied');
-        }
+        run: () => { navigator.clipboard?.writeText(pane.url); toast('Link copied'); }
       },
       { icon: '↗', label: 'Open in a new tab', run: () => window.open(pane.url, '_blank', 'noopener') }
-    ]);
+    );
+
+    showActions(`Pane ${id} · ${positionName(id)}`, actions);
   }
 
   function showPlacementMenu(app) {
-    showActions(`Where should ${app.name} go?`, [
-      { icon: '◧', label: 'Open in Pane 1', run: () => loadPane(1, app.url) },
-      { icon: '◨', label: 'Open in Pane 2', run: () => loadPane(2, app.url) },
-      { icon: '⧉', label: 'Open in the floating window', run: () => openFloating(app.url) }
-    ]);
+    const actions = [];
+    for (let id = 1; id <= state.paneCount; id += 1) {
+      const target = id;
+      actions.push({
+        icon: '◧',
+        label: `Open in ${positionName(target)}`,
+        run: () => loadPane(target, app.url)
+      });
+    }
+    showActions(`Where should ${app.name} go?`, actions);
   }
 
   function showShortcuts() {
     showActions('Keyboard shortcuts', [
-      { icon: '1', label: 'Ctrl + 1 / 2 — focus a pane', run: () => {} },
-      { icon: '⇄', label: 'Ctrl + E — swap the panes', run: swapPanes },
+      { icon: '1', label: 'Ctrl + 1 / 2 / 3 — focus a pane', run: () => {} },
+      { icon: '⇄', label: 'Ctrl + E — swap panes 1 and 2', run: () => swapPanes(1, 2) },
       { icon: '↻', label: 'Ctrl + R — reload the focused pane', run: () => {} },
       { icon: '⟲', label: 'Ctrl + D — rotate the split', run: () => setDirection(!state.vertical) },
       { icon: '⬒', label: 'Ctrl + M — full screen the focused pane', run: () => {} },
@@ -637,7 +755,7 @@
     $('picker-search').value = '';
     $('picker-step').textContent = 'Step 1 of 2';
     $('picker-title').textContent = 'Choose the first app';
-    $('picker-desc').textContent = 'Pick what goes in Pane 1.';
+    $('picker-desc').textContent = `Pick what goes in ${positionName(1)}.`;
     $('picker-back').hidden = true;
     renderPicker();
     openModal('picker-modal');
@@ -648,7 +766,8 @@
     $('picker-search').value = '';
     $('picker-step').textContent = 'Step 2 of 2';
     $('picker-title').textContent = 'Choose the second app';
-    $('picker-desc').textContent = `${pickerFirst.name} goes in Pane 1. Now pick what fills Pane 2.`;
+    $('picker-desc').textContent =
+      `${pickerFirst.name} goes in ${positionName(1)}. Now pick what fills ${positionName(2)}.`;
     $('picker-back').hidden = false;
     renderPicker();
   }
@@ -656,11 +775,10 @@
   $('picker-back').addEventListener('click', openPicker);
   $('picker-search').addEventListener('input', renderPicker);
 
+  const pickerGrid = $('picker-grid');
+
   function renderPicker() {
     const query = $('picker-search').value.trim().toLowerCase();
-    const grid = $('picker-grid');
-    grid.innerHTML = '';
-
     const matches = ALL_APPS.filter(
       (app) => !query || app.name.toLowerCase().includes(query) || app.url.toLowerCase().includes(query)
     );
@@ -669,15 +787,17 @@
       const empty = document.createElement('p');
       empty.className = 'empty-note';
       empty.textContent = 'Nothing matched that search.';
-      grid.appendChild(empty);
+      pickerGrid.replaceChildren(empty);
       return;
     }
 
+    const fragment = document.createDocumentFragment();
     matches.forEach((app) => {
       const card = document.createElement('button');
       card.type = 'button';
       card.className = 'app-card';
-      card.innerHTML = '<span class="ac-icon"></span><span><span class="ac-name"></span><br><span class="ac-sub"></span></span>';
+      card.innerHTML =
+        '<span class="ac-icon"></span><span><span class="ac-name"></span><br><span class="ac-sub"></span></span>';
       card.querySelector('.ac-icon').textContent = app.icon;
       card.querySelector('.ac-name').textContent = app.name;
       card.querySelector('.ac-sub').textContent = isLocalPage(app.url) ? 'demo page' : hostOf(app.url);
@@ -693,19 +813,15 @@
           toast(`${pickerFirst.name} + ${app.name}`);
         }
       });
-      grid.appendChild(card);
+      fragment.appendChild(card);
     });
+    pickerGrid.replaceChildren(fragment);
   }
 
   /* ------------------------------------------------------------- app pairs */
 
-  function getPairs() {
-    return store.read(STORE.pairs, DEFAULT_PAIRS);
-  }
-
-  function setPairs(pairs) {
-    store.write(STORE.pairs, pairs);
-  }
+  const getPairs = () => store.read(STORE.pairs, DEFAULT_PAIRS);
+  const setPairs = (pairs) => store.write(STORE.pairs, pairs);
 
   function promptSavePair() {
     const suggested = `${hostOf(panes[1].url)} + ${hostOf(panes[2].url)}`;
@@ -723,19 +839,19 @@
     openModal('pairs-modal');
   }
 
-  function renderPairs() {
-    const list = $('pairs-list');
-    const pairs = getPairs();
-    list.innerHTML = '';
+  const pairsList = $('pairs-list');
 
+  function renderPairs() {
+    const pairs = getPairs();
     if (pairs.length === 0) {
       const empty = document.createElement('p');
       empty.className = 'empty-note';
       empty.textContent = 'No pairs saved yet — set up a split and tap ★ Save pair.';
-      list.appendChild(empty);
+      pairsList.replaceChildren(empty);
       return;
     }
 
+    const fragment = document.createDocumentFragment();
     pairs.forEach((pair) => {
       const row = document.createElement('div');
       row.className = 'pair-row';
@@ -766,139 +882,9 @@
         toast('Pair deleted');
       });
 
-      list.appendChild(row);
+      fragment.appendChild(row);
     });
-  }
-
-  /* ------------------------------------------------------- floating window */
-
-  const floatEl = $('floating');
-  const floatFrame = $('float-frame');
-  const floatUrl = $('float-url');
-  const systemBg = $('system-bg');
-  const ALPHA_STEPS = [1, 0.85, 0.65, 0.45];
-
-  function openFloating(url) {
-    state.floating.url = normalizeUrl(url);
-    state.floating.minimized = false;
-    floatEl.classList.remove('minimized');
-    floatEl.hidden = false;
-    systemBg.hidden = false;
-    floatUrl.value = isLocalPage(state.floating.url)
-      ? hostOf(state.floating.url)
-      : prettyUrl(state.floating.url);
-    $('float-title').textContent = hostOf(state.floating.url);
-
-    if (isFrameBlocked(state.floating.url)) {
-      floatFrame.removeAttribute('src');
-      floatFrame.srcdoc =
-        '<body style="font:13px system-ui;padding:20px;color:#666">' +
-        'This site blocks embedding in a browser. In the Android app it loads in a real WebView.' +
-        '</body>';
-    } else {
-      floatFrame.removeAttribute('srcdoc');
-      floatFrame.src = state.floating.url;
-    }
-  }
-
-  function closeFloating() {
-    floatEl.hidden = true;
-    systemBg.hidden = true;
-    floatEl.classList.remove('minimized');
-    state.floating.minimized = false;
-  }
-
-  $('float-close').addEventListener('click', closeFloating);
-  $('btn-close-system').addEventListener('click', closeFloating);
-
-  $('float-minimize').addEventListener('click', () => {
-    state.floating.minimized = true;
-    floatEl.classList.add('minimized');
-  });
-
-  $('float-header').addEventListener('click', (event) => {
-    if (state.floating.minimized && !event.target.closest('.float-actions')) {
-      state.floating.minimized = false;
-      floatEl.classList.remove('minimized');
-    }
-  });
-
-  $('float-opacity').addEventListener('click', () => {
-    state.floating.alphaStep = (state.floating.alphaStep + 1) % ALPHA_STEPS.length;
-    floatEl.style.opacity = String(ALPHA_STEPS[state.floating.alphaStep]);
-  });
-
-  $('float-go').addEventListener('click', () => openFloating(floatUrl.value));
-  floatUrl.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') openFloating(floatUrl.value);
-  });
-  $('float-reload').addEventListener('click', () => openFloating(state.floating.url));
-  $('float-back').addEventListener('click', () => {
-    try {
-      floatFrame.contentWindow?.history.back();
-    } catch (err) {
-      /* cross-origin frames will not let us walk their history */
-    }
-  });
-
-  // Drag the header to move the window; it snaps to the nearest screen edge.
-  makeDraggable($('float-header'), (dx, dy, start) => {
-    const screen = $('screen').getBoundingClientRect();
-    const width = floatEl.offsetWidth;
-    const height = floatEl.offsetHeight;
-    floatEl.style.left = `${Math.min(Math.max(start.left + dx, 0), screen.width - width)}px`;
-    floatEl.style.top = `${Math.min(Math.max(start.top + dy, 0), screen.height - height)}px`;
-  }, () => {
-    const screen = $('screen').getBoundingClientRect();
-    const width = floatEl.offsetWidth;
-    const centre = floatEl.offsetLeft + width / 2;
-    floatEl.style.left = centre < screen.width / 2 ? '8px' : `${screen.width - width - 8}px`;
-  });
-
-  // Drag the corner to resize it.
-  makeDraggable($('float-resize'), (dx, dy, start) => {
-    floatEl.style.width = `${Math.max(240, start.width + dx)}px`;
-    floatEl.style.height = `${Math.max(200, start.height + dy)}px`;
-  });
-
-  function makeDraggable(handle, onMove, onEnd) {
-    let active = false;
-    let startX = 0;
-    let startY = 0;
-    let start = {};
-
-    handle.addEventListener('pointerdown', (event) => {
-      if (state.floating.minimized && handle === $('float-resize')) return;
-      // Never start a drag from the window's own buttons, or preventDefault
-      // below would swallow their click.
-      if (event.target.closest('.float-actions, button')) return;
-      active = true;
-      startX = event.clientX;
-      startY = event.clientY;
-      start = {
-        left: floatEl.offsetLeft,
-        top: floatEl.offsetTop,
-        width: floatEl.offsetWidth,
-        height: floatEl.offsetHeight
-      };
-      handle.setPointerCapture(event.pointerId);
-      event.preventDefault();
-    });
-
-    handle.addEventListener('pointermove', (event) => {
-      if (!active) return;
-      onMove(event.clientX - startX, event.clientY - startY, start);
-    });
-
-    const finish = (event) => {
-      if (!active) return;
-      active = false;
-      if (handle.hasPointerCapture?.(event.pointerId)) handle.releasePointerCapture(event.pointerId);
-      if (onEnd) onEnd();
-    };
-
-    handle.addEventListener('pointerup', finish);
-    handle.addEventListener('pointercancel', finish);
+    pairsList.replaceChildren(fragment);
   }
 
   /* ------------------------------------------------------------- shortcuts */
@@ -907,8 +893,7 @@
     if (event.key === 'Escape') {
       const open = qsa('.modal').find((modal) => !modal.hidden);
       if (open) { open.hidden = true; return; }
-      if (state.maximized !== 0) { restorePanes(); return; }
-      if (!floatEl.hidden) closeFloating();
+      if (state.maximized !== 0) restorePanes();
       return;
     }
 
@@ -917,7 +902,8 @@
     const handlers = {
       '1': () => setActivePane(1),
       '2': () => setActivePane(2),
-      e: swapPanes,
+      '3': () => { if (state.paneCount === 3) setActivePane(3); },
+      e: () => { swapPanes(1, 2); toast('Panes swapped'); },
       r: () => loadPane(state.active, panes[state.active].url, { pushHistory: false }),
       d: () => setDirection(!state.vertical),
       m: () => toggleMaximize(state.active)
@@ -933,12 +919,19 @@
   /* ------------------------------------------------------------------ boot */
 
   const session = store.read(STORE.session, null);
+  state.ratio = session?.ratio ?? 0.5;
+  state.secondaryRatio = session?.secondaryRatio ?? 0.5;
+  state.paneCount = session?.paneCount === 3 ? 3 : 2;
   setDirection(session?.vertical !== false);
-  applyRatio(session?.ratio ?? 0.5, { persist: false });
-  loadPane(1, session?.p1 || 'pages/player.html');
-  loadPane(2, session?.p2 || 'pages/notes.html');
-  setDesktopMode(1, Boolean(session?.d1));
-  setDesktopMode(2, Boolean(session?.d2));
+
+  const urls = session?.urls || ['pages/player.html', 'pages/notes.html', 'pages/reader.html'];
+  loadPane(1, urls[0] || 'pages/player.html');
+  loadPane(2, urls[1] || 'pages/notes.html');
+  if (state.paneCount === 3) loadPane(3, urls[2] || 'pages/reader.html');
+
+  (session?.desktop || []).forEach((desktop, index) => setDesktopMode(index + 1, Boolean(desktop)));
+  applyLayout();
+  updateLayoutButtons();
   setActivePane(1);
 
   qsa('[data-ratio]').forEach((button) => {
@@ -946,5 +939,8 @@
   });
 
   // Exposed for the automated tests in tests/.
-  window.__splitpad = { state, panes, applyRatio, swapPanes, toggleMaximize, setDirection, loadPane, normalizeUrl, hostOf };
+  window.__splitpad = {
+    state, panes, applyRatio, applySecondaryRatio, swapPanes, toggleMaximize,
+    setDirection, setPaneCount, loadPane, positionName, normalizeUrl, hostOf
+  };
 })();

@@ -4,87 +4,69 @@ import android.content.Context
 
 /**
  * Remembers the workspace between launches: what each pane was showing, how the
- * split was arranged and which mode the user was last in. The previous build
- * threw all of this away on every cold start.
+ * split was arranged and which mode the user was last in.
  */
 class Prefs(context: Context) {
 
     private val sp = context.applicationContext
         .getSharedPreferences("split_pad_session", Context.MODE_PRIVATE)
 
-    var pane1Url: String
-        get() = sp.getString(KEY_URL_1, DEFAULT_URL_1) ?: DEFAULT_URL_1
-        set(value) = sp.edit().putString(KEY_URL_1, value).apply()
+    fun paneUrl(pane: Int): String =
+        sp.getString(keyUrl(pane), defaultUrl(pane)) ?: defaultUrl(pane)
 
-    var pane2Url: String
-        get() = sp.getString(KEY_URL_2, DEFAULT_URL_2) ?: DEFAULT_URL_2
-        set(value) = sp.edit().putString(KEY_URL_2, value).apply()
+    fun setPaneUrl(pane: Int, url: String) = sp.edit().putString(keyUrl(pane), url).apply()
+
+    fun paneDesktop(pane: Int): Boolean = sp.getBoolean(keyDesktop(pane), false)
+
+    fun setPaneDesktop(pane: Int, desktop: Boolean) =
+        sp.edit().putBoolean(keyDesktop(pane), desktop).apply()
 
     /** Fraction of the split taken by pane 1, between [MIN_RATIO] and [MAX_RATIO]. */
     var splitRatio: Float
         get() = sp.getFloat(KEY_RATIO, 0.5f).coerceIn(MIN_RATIO, MAX_RATIO)
         set(value) = sp.edit().putFloat(KEY_RATIO, value.coerceIn(MIN_RATIO, MAX_RATIO)).apply()
 
-    /** true = panes stacked top/bottom, false = side by side. */
+    /** Fraction of the second half taken by pane 2, when three panes are shown. */
+    var secondaryRatio: Float
+        get() = sp.getFloat(KEY_RATIO_2, 0.5f).coerceIn(MIN_RATIO, MAX_RATIO)
+        set(value) = sp.edit().putFloat(KEY_RATIO_2, value.coerceIn(MIN_RATIO, MAX_RATIO)).apply()
+
+    /** true = the primary split runs top/bottom, false = side by side. */
     var verticalSplit: Boolean
         get() = sp.getBoolean(KEY_VERTICAL, true)
         set(value) = sp.edit().putBoolean(KEY_VERTICAL, value).apply()
 
-    var pane1Desktop: Boolean
-        get() = sp.getBoolean(KEY_DESKTOP_1, false)
-        set(value) = sp.edit().putBoolean(KEY_DESKTOP_1, value).apply()
-
-    var pane2Desktop: Boolean
-        get() = sp.getBoolean(KEY_DESKTOP_2, false)
-        set(value) = sp.edit().putBoolean(KEY_DESKTOP_2, value).apply()
+    /** 2 or 3 — how many panes the workspace is showing. */
+    var paneCount: Int
+        get() = sp.getInt(KEY_PANE_COUNT, 2).coerceIn(2, 3)
+        set(value) = sp.edit().putInt(KEY_PANE_COUNT, value.coerceIn(2, 3)).apply()
 
     /** true once the user has opened the split workspace at least once. */
     var resumeInSplit: Boolean
         get() = sp.getBoolean(KEY_RESUME_SPLIT, false)
         set(value) = sp.edit().putBoolean(KEY_RESUME_SPLIT, value).apply()
 
-    var floatingUrl: String
-        get() = sp.getString(KEY_FLOAT_URL, DEFAULT_URL_2) ?: DEFAULT_URL_2
-        set(value) = sp.edit().putString(KEY_FLOAT_URL, value).apply()
+    private fun keyUrl(pane: Int) = "pane${pane}_url"
 
-    var floatingAlpha: Float
-        get() = sp.getFloat(KEY_FLOAT_ALPHA, 1.0f).coerceIn(0.4f, 1.0f)
-        set(value) = sp.edit().putFloat(KEY_FLOAT_ALPHA, value.coerceIn(0.4f, 1.0f)).apply()
+    private fun keyDesktop(pane: Int) = "pane${pane}_desktop"
 
-    var floatingX: Int
-        get() = sp.getInt(KEY_FLOAT_X, 48)
-        set(value) = sp.edit().putInt(KEY_FLOAT_X, value).apply()
-
-    var floatingY: Int
-        get() = sp.getInt(KEY_FLOAT_Y, 140)
-        set(value) = sp.edit().putInt(KEY_FLOAT_Y, value).apply()
-
-    var floatingWidth: Int
-        get() = sp.getInt(KEY_FLOAT_W, 0)
-        set(value) = sp.edit().putInt(KEY_FLOAT_W, value).apply()
-
-    var floatingHeight: Int
-        get() = sp.getInt(KEY_FLOAT_H, 0)
-        set(value) = sp.edit().putInt(KEY_FLOAT_H, value).apply()
+    private fun defaultUrl(pane: Int) = when (pane) {
+        1 -> DEFAULT_URL_1
+        2 -> DEFAULT_URL_2
+        else -> DEFAULT_URL_3
+    }
 
     companion object {
         const val MIN_RATIO = 0.15f
         const val MAX_RATIO = 0.85f
         const val DEFAULT_URL_1 = "https://m.youtube.com"
         const val DEFAULT_URL_2 = "https://www.google.com"
+        const val DEFAULT_URL_3 = "https://www.wikipedia.org"
 
-        private const val KEY_URL_1 = "pane1_url"
-        private const val KEY_URL_2 = "pane2_url"
         private const val KEY_RATIO = "split_ratio"
+        private const val KEY_RATIO_2 = "split_ratio_secondary"
         private const val KEY_VERTICAL = "split_vertical"
-        private const val KEY_DESKTOP_1 = "pane1_desktop"
-        private const val KEY_DESKTOP_2 = "pane2_desktop"
+        private const val KEY_PANE_COUNT = "pane_count"
         private const val KEY_RESUME_SPLIT = "resume_split"
-        private const val KEY_FLOAT_URL = "floating_url"
-        private const val KEY_FLOAT_ALPHA = "floating_alpha"
-        private const val KEY_FLOAT_X = "floating_x"
-        private const val KEY_FLOAT_Y = "floating_y"
-        private const val KEY_FLOAT_W = "floating_w"
-        private const val KEY_FLOAT_H = "floating_h"
     }
 }

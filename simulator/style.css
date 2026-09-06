@@ -331,10 +331,24 @@ body {
   min-width: 0;
   display: flex;
   padding: 8px;
-  gap: 0;
 }
 .split.vertical { flex-direction: column; }
 .split.horizontal { flex-direction: row; }
+
+.secondary-group {
+  display: flex;
+  min-width: 0;
+  min-height: 0;
+}
+/* Primary split stacked  -> the pair sits side by side underneath.
+   Primary split side by side -> the pair stacks, one above the other. */
+.split.vertical > .secondary-group { flex-direction: row; }
+.split.horizontal > .secondary-group { flex-direction: column; }
+
+.split.vertical > .secondary-group > .divider { width: 22px; height: auto; cursor: col-resize; }
+.split.horizontal > .secondary-group > .divider { height: 22px; width: auto; cursor: row-resize; }
+.split.vertical > .secondary-group > .divider .divider-pill { width: 5px; height: 52px; }
+.split.horizontal > .secondary-group > .divider .divider-pill { width: 52px; height: 5px; }
 
 .pane {
   position: relative;
@@ -472,108 +486,6 @@ body {
   transition: opacity 0.14s var(--ease);
 }
 .divider.dragging .ratio-tip { opacity: 1; }
-
-/* Floating window --------------------------------------------------------- */
-.floating {
-  position: absolute;
-  z-index: 40;
-  left: 90px; top: 80px;
-  width: 380px; height: 420px;
-  display: flex;
-  flex-direction: column;
-  border-radius: var(--radius-lg);
-  background: var(--glass-strong);
-  backdrop-filter: var(--blur);
-  -webkit-backdrop-filter: var(--blur);
-  border: 1px solid var(--glass-stroke);
-  box-shadow: var(--shadow-lg);
-  overflow: hidden;
-}
-.floating[hidden] { display: none; }
-.floating.minimized { width: 56px !important; height: 56px !important; border-radius: 50%; }
-.floating.minimized .float-body,
-.floating.minimized .float-nav,
-.floating.minimized .float-title,
-.floating.minimized .float-actions,
-.floating.minimized .float-resize { display: none; }
-.floating.minimized .float-header {
-  height: 100%;
-  justify-content: center;
-  background: var(--accent);
-  color: var(--accent-ink);
-  cursor: pointer;
-}
-.floating.minimized .float-grip { display: none; }
-.floating.minimized::after {
-  content: "⧉";
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  font-size: 20px;
-  color: var(--accent-ink);
-  pointer-events: none;
-}
-
-.float-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  height: 38px;
-  padding: 0 8px 0 12px;
-  background: var(--glass-soft);
-  border-bottom: 1px solid var(--glass-stroke-soft);
-  cursor: grab;
-  touch-action: none;
-  flex: 0 0 auto;
-}
-.float-header:active { cursor: grabbing; }
-.float-grip { width: 28px; height: 4px; border-radius: 3px; background: var(--accent); opacity: 0.5; }
-.float-title { flex: 1 1 auto; font-size: 12px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.float-actions { display: flex; gap: 2px; flex: 0 0 auto; }
-
-.float-nav { display: flex; align-items: center; gap: 4px; padding: 6px 8px; flex: 0 0 auto; }
-.float-body { position: relative; flex: 1 1 auto; min-height: 0; }
-.float-body iframe { width: 100%; height: 100%; border: 0; }
-
-.float-resize {
-  position: absolute;
-  right: 0; bottom: 0;
-  width: 22px; height: 22px;
-  cursor: nwse-resize;
-  touch-action: none;
-  background:
-    linear-gradient(135deg, transparent 50%, var(--accent) 50%);
-  opacity: 0.5;
-  border-bottom-right-radius: var(--radius-lg);
-}
-.float-resize:hover { opacity: 0.9; }
-
-/* Background "other app" shown behind the floating window ------------------ */
-.system-bg {
-  position: absolute;
-  inset: 0;
-  z-index: 30;
-  background: var(--glass-strong);
-  backdrop-filter: var(--blur);
-  -webkit-backdrop-filter: var(--blur);
-  padding: 18px;
-}
-.system-bg[hidden] { display: none; }
-.system-bg-bar {
-  display: flex; align-items: center; justify-content: space-between;
-  font-size: 12px; color: var(--text-2); margin-bottom: 18px;
-}
-.system-bg-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 14px; }
-.system-tile {
-  display: grid; place-items: center; gap: 6px;
-  padding: 14px 8px;
-  border-radius: var(--radius-md);
-  background: var(--glass-soft);
-  border: 1px solid var(--glass-stroke-soft);
-  font-size: 11px; color: var(--text-2);
-}
-.system-tile span:first-child { font-size: 22px; }
 
 /* Modals ------------------------------------------------------------------ */
 .modal {

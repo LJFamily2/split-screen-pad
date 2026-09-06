@@ -6,8 +6,8 @@
  *
  * These exercise the behaviour a person actually touches: the divider (with
  * real pointer events, so touch support is covered), the ratio presets, swap,
- * rotate, full screen, the app picker, saved pairs, the floating window and the
- * light/dark theme switch.
+ * rotate, full screen, the two- and three-pane layouts, the app picker, saved
+ * pairs and the light/dark theme switch.
  */
 const http = require('http');
 const fs = require('fs');
@@ -86,10 +86,11 @@ async function reset(page) {
   await page.evaluate(() => {
     const sp = window.__splitpad;
     if (sp.state.maximized !== 0) sp.toggleMaximize(sp.state.maximized);
+    if (sp.state.paneCount !== 2) sp.setPaneCount(2);
     if (!sp.state.vertical) sp.setDirection(true);
     sp.applyRatio(0.5);
+    sp.applySecondaryRatio(0.5);
   });
-  if (!(await page.locator('#floating').isHidden())) await page.click('#float-close');
 }
 
 /** Closes whatever dialog a previous check left open. */
@@ -207,14 +208,14 @@ async function main() {
     assert(after[0] === before[1] && after[1] === before[0], `swap (${before} -> ${after})`);
   }, page);
 
-  await check('double-tapping the divider swaps the panes', async () => {
+  await check('the divider menu opens immediately, with no double-tap delay', async () => {
     await closeDialogs(page);
-    const before = await page.evaluate(() => window.__splitpad.panes[1].url);
-    await tap(page, '#divider', 2);
-    await page.waitForTimeout(400);
-    const after = await page.evaluate(() => window.__splitpad.panes[1].url);
-    assert(after !== before, 'double tap swapped');
-    assert(await page.locator('#action-modal').isHidden(), 'double tap did not also open the menu');
+    const started = Date.now();
+    await tap(page, '#divider');
+    await page.waitForSelector('#action-modal:not([hidden])');
+    const elapsed = Date.now() - started;
+    assert(elapsed < 250, `sheet opened in ${elapsed}ms`);
+    await page.keyboard.press('Escape');
   }, page);
 
   await check('tapping the divider opens the split options menu', async () => {
@@ -244,12 +245,13 @@ async function main() {
     await page.click('#btn-ratio-50');
   }, page);
 
-  await check('pane menu offers full screen and floating', async () => {
+  await check('the panel menu offers full screen and a move-to action', async () => {
     await page.click('[data-menu="1"]');
     await page.waitForSelector('#action-modal:not([hidden])');
     const labels = await page.locator('#action-list .ar-label').allTextContents();
     assert(labels.some((l) => /full screen/i.test(l)), 'full screen action');
-    assert(labels.some((l) => /floating/i.test(l)), 'floating action');
+    assert(labels.some((l) => /^Move to /.test(l)), `move action, got ${labels.join(' | ')}`);
+    assert(labels.some((l) => /third pane/i.test(l)), 'add-a-pane action');
     await page.keyboard.press('Escape');
   }, page);
 
@@ -319,29 +321,107 @@ async function main() {
     await page.click('#ua-1');
   }, page);
 
-  await check('floating window opens, drags, resizes and minimises', async () => {
-    await page.click('#btn-floating');
-    await page.waitForSelector('#floating:not([hidden])');
+  await check('switching to three panes gives one half plus two stacked', async () => {
+    await page.click('#btn-layout-3');
+    const st = await page.evaluate(() => window.__splitpad.state);
+    assert(st.paneCount === 3, `pane count ${st.paneCount}`);
+    assert(st.vertical === false, 'primary split runs left/right for three panes');
+    for (const id of [1, 2, 3]) {
+      assert(await page.locator(`#pane-${id}`).isVisible(), `pane ${id} visible`);
+    }
 
-    const startBox = await page.locator('#floating').boundingBox();
-    await dragBy(page, '#float-header', 220, 90);
-    const movedBox = await page.locator('#floating').boundingBox();
-    assert(Math.abs(movedBox.y - startBox.y) > 20, 'window moved vertically');
+    // Pane 1 spans the full height of one half; 2 and 3 share the other half.
+    const [b1, b2, b3] = await Promise.all(
+      [1, 2, 3].map((id) => page.locator(`#pane-${id}`).boundingBox())
+    );
+    assert(b1.height > b2.height * 1.5, `pane 1 is full height (${b1.height} vs ${b2.height})`);
+    assert(Math.abs(b2.x - b3.x) < 2, 'panes 2 and 3 share a column');
+    assert(b3.y > b2.y + b2.height - 2, 'pane 3 sits below pane 2');
+    assert(b2.x > b1.x + b1.width - 40, 'the stacked pair is in the other half');
+  }, page);
 
-    const beforeResize = await page.locator('#floating').boundingBox();
-    await dragBy(page, '#float-resize', 90, 70);
-    const afterResize = await page.locator('#floating').boundingBox();
-    assert(afterResize.width > beforeResize.width + 20, 'window widened');
+  await check('the third pane loads its own page', async () => {
+    await page.click('#btn-layout-3');
+    const frame = page.frameLocator('#frame-3');
+    await frame.locator('h1').first().waitFor({ timeout: 5000 });
+    const text = await frame.locator('h1').first().textContent();
+    assert(text && text.trim().length > 0, 'pane 3 content');
+  }, page);
 
-    await page.click('#float-minimize');
-    const bubble = await page.locator('#floating').boundingBox();
-    assert(bubble.width < 80, `minimised to a bubble (${bubble.width}px)`);
-    await page.click('#float-header');
-    const restored = await page.locator('#floating').boundingBox();
-    assert(restored.width > 200, 'restored from the bubble');
+  await check('the second divider resizes only the stacked pair', async () => {
+    await page.click('#btn-layout-3');
+    const before = await page.evaluate(() => window.__splitpad.state);
+    await dragBy(page, '#divider-2', 0, 90);
+    const after = await page.evaluate(() => window.__splitpad.state);
+    assert(after.secondaryRatio > before.secondaryRatio + 0.05,
+      `secondary ratio ${before.secondaryRatio} -> ${after.secondaryRatio}`);
+    assertClose(after.ratio, before.ratio, 0.01, 'primary ratio untouched');
+  }, page);
 
-    await page.click('#float-close');
-    assert(await page.locator('#floating').isHidden(), 'closed');
+  await check('the panel menu moves a pane between slots', async () => {
+    await page.click('#btn-layout-3');
+    const before = await page.evaluate(() => [
+      window.__splitpad.panes[1].url, window.__splitpad.panes[3].url
+    ]);
+    await page.click('[data-menu="1"]');
+    await page.waitForSelector('#action-modal:not([hidden])');
+    await page.locator('.action-row', { hasText: 'Move to Bottom right' }).click();
+    const after = await page.evaluate(() => [
+      window.__splitpad.panes[1].url, window.__splitpad.panes[3].url
+    ]);
+    assert(after[0] === before[1] && after[2 - 1] === before[0],
+      `moved pane 1 to the bottom right (${before} -> ${after})`);
+  }, page);
+
+  await check('slot names follow the layout', async () => {
+    const names = await page.evaluate(() => {
+      const sp = window.__splitpad;
+      sp.setPaneCount(2);
+      sp.setDirection(true);
+      const twoStacked = [sp.positionName(1), sp.positionName(2)];
+      sp.setPaneCount(3);
+      const three = [sp.positionName(1), sp.positionName(2), sp.positionName(3)];
+      return { twoStacked, three };
+    });
+    assert(names.twoStacked.join() === 'Top,Bottom', names.twoStacked.join());
+    assert(names.three.join() === 'Left half,Top right,Bottom right', names.three.join());
+  }, page);
+
+  await check('closing a pane returns to two and keeps the survivors', async () => {
+    await page.click('#btn-layout-3');
+    await page.evaluate(() => {
+      window.__splitpad.loadPane(1, 'pages/player.html');
+      window.__splitpad.loadPane(2, 'pages/notes.html');
+      window.__splitpad.loadPane(3, 'pages/reader.html');
+    });
+    await page.click('[data-menu="2"]');
+    await page.waitForSelector('#action-modal:not([hidden])');
+    await page.locator('.action-row', { hasText: 'Close this pane' }).click();
+    const st = await page.evaluate(() => ({
+      count: window.__splitpad.state.paneCount,
+      urls: [window.__splitpad.panes[1].url, window.__splitpad.panes[2].url]
+    }));
+    assert(st.count === 2, `back to ${st.count} panes`);
+    assert(st.urls[0].includes('player'), `pane 1 kept: ${st.urls[0]}`);
+    assert(st.urls[1].includes('reader'), `pane 3 moved up: ${st.urls[1]}`);
+    assert(await page.locator('#pane-3').isHidden(), 'third pane hidden');
+  }, page);
+
+  await check('the pane count survives a reload', async () => {
+    await page.click('#btn-layout-3');
+    await page.reload({ waitUntil: 'load' });
+    await page.waitForFunction(() => Boolean(window.__splitpad));
+    const st = await page.evaluate(() => window.__splitpad.state);
+    assert(st.paneCount === 3, `restored ${st.paneCount} panes`);
+    assert(await page.locator('#pane-3').isVisible(), 'pane 3 restored');
+  }, page);
+
+  await check('the floating window is gone', async () => {
+    assert(await page.locator('#floating').count() === 0, 'no floating window element');
+    assert(await page.locator('#btn-floating').count() === 0, 'no floating toolbar button');
+    const labels = await page.evaluate(() =>
+      Array.from(document.querySelectorAll('button')).map((b) => b.textContent).join(' '));
+    assert(!/float/i.test(labels), 'no floating controls remain');
   }, page);
 
   await check('keyboard shortcuts drive the split', async () => {

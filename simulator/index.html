@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light dark">
-  <meta name="description" content="Interactive simulator for Split Pad — the split-screen and floating-window multitasking app for Android tablets.">
+  <meta name="description" content="Interactive simulator for Split Pad — the split-screen multitasking app for Android tablets.">
   <title>Split Pad — Split Screen Simulator</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%278%27 fill=%27%232f6bff%27/%3E%3Crect x=%277%27 y=%278%27 width=%277%27 height=%2716%27 rx=%272%27 fill=%27white%27/%3E%3Crect x=%2718%27 y=%278%27 width=%277%27 height=%2716%27 rx=%272%27 fill=%27white%27 opacity=%270.75%27/%3E%3C/svg%3E">
   <link rel="stylesheet" href="style.css">
@@ -38,7 +38,10 @@
       <button class="btn" id="btn-apps" title="Pick two apps to split">▦ Apps</button>
       <button class="btn" id="btn-save-pair" title="Save the current pair">★ Save pair</button>
       <button class="btn" id="btn-pairs" title="Open a saved pair">🗂 Pairs</button>
-      <button class="btn btn-primary" id="btn-floating" title="Open the floating window">⧉ Float</button>
+      <div class="seg" role="group" aria-label="Pane count">
+        <button class="btn active" id="btn-layout-2" title="Two panes">▤ 2 panes</button>
+        <button class="btn" id="btn-layout-3" title="One half, plus two stacked">▥ 3 panes</button>
+      </div>
     </div>
 
     <button class="btn-icon" id="btn-theme" title="Theme: follows your device" aria-label="Change theme">🌗</button>
@@ -59,99 +62,87 @@
 
         <!-- The split itself -->
         <div class="split vertical" id="split">
-          <section class="pane active" id="pane-1" style="flex: 0.5 1 0%;" aria-label="Pane 1">
-            <div class="pane-bar">
-              <button class="pane-badge" data-focus="1">PANE 1</button>
-              <button class="btn-icon" data-nav="back" data-pane="1" title="Back">‹</button>
-              <button class="btn-icon" data-nav="forward" data-pane="1" title="Forward">›</button>
-              <button class="btn-icon" data-nav="reload" data-pane="1" title="Reload">↻</button>
-              <input class="url-field" id="url-1" type="text" spellcheck="false"
-                     placeholder="Search or type a web address" aria-label="Pane 1 address">
-              <button class="ua-toggle" id="ua-1" title="Switch between the mobile and desktop site">Mobile</button>
-              <button class="btn-icon" data-menu="1" title="Pane options">⋮</button>
-            </div>
-            <div class="pane-progress" id="progress-1"></div>
-            <div class="viewport">
-              <iframe id="frame-1" title="Pane 1 content"
-                      allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"></iframe>
-              <div class="embed-block" id="block-1">
-                <div class="eb-icon">🔒</div>
-                <h4 id="block-title-1">This site blocks embedding</h4>
-                <p id="block-text-1"></p>
-                <button class="btn" data-open-tab="1">Open in a new tab</button>
+            <section class="pane active" id="pane-1" aria-label="Pane 1">
+              <div class="pane-bar">
+                <button class="pane-badge" data-focus="1">PANE 1</button>
+                <button class="btn-icon" data-nav="back" data-pane="1" title="Back">‹</button>
+                <button class="btn-icon" data-nav="forward" data-pane="1" title="Forward">›</button>
+                <button class="btn-icon" data-nav="reload" data-pane="1" title="Reload">↻</button>
+                <input class="url-field" id="url-1" type="text" spellcheck="false"
+                       placeholder="Search or type a web address" aria-label="Pane 1 address">
+                <button class="ua-toggle" id="ua-1" title="Switch between the mobile and desktop site">Mobile</button>
+                <button class="btn-icon" data-menu="1" title="Pane options">⋮</button>
               </div>
-            </div>
-          </section>
-
-          <div class="divider" id="divider" role="separator" tabindex="0"
-               aria-label="Drag to resize, double-tap to swap, tap for options">
-            <div class="divider-pill"></div>
-            <div class="ratio-tip" id="ratio-tip">50 : 50</div>
-          </div>
-
-          <section class="pane" id="pane-2" style="flex: 0.5 1 0%;" aria-label="Pane 2">
-            <div class="pane-bar">
-              <button class="pane-badge" data-focus="2">PANE 2</button>
-              <button class="btn-icon" data-nav="back" data-pane="2" title="Back">‹</button>
-              <button class="btn-icon" data-nav="forward" data-pane="2" title="Forward">›</button>
-              <button class="btn-icon" data-nav="reload" data-pane="2" title="Reload">↻</button>
-              <input class="url-field" id="url-2" type="text" spellcheck="false"
-                     placeholder="Search or type a web address" aria-label="Pane 2 address">
-              <button class="ua-toggle" id="ua-2" title="Switch between the mobile and desktop site">Mobile</button>
-              <button class="btn-icon" data-menu="2" title="Pane options">⋮</button>
-            </div>
-            <div class="pane-progress" id="progress-2"></div>
-            <div class="viewport">
-              <iframe id="frame-2" title="Pane 2 content"
-                      allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"></iframe>
-              <div class="embed-block" id="block-2">
-                <div class="eb-icon">🔒</div>
-                <h4 id="block-title-2">This site blocks embedding</h4>
-                <p id="block-text-2"></p>
-                <button class="btn" data-open-tab="2">Open in a new tab</button>
+              <div class="pane-progress" id="progress-1"></div>
+              <div class="viewport">
+                <iframe id="frame-1" title="Pane 1 content"
+                        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"></iframe>
+                <div class="embed-block" id="block-1">
+                  <div class="eb-icon">🔒</div>
+                  <h4 id="block-title-1">This site blocks embedding</h4>
+                  <p id="block-text-1"></p>
+                  <button class="btn" data-open-tab="1">Open in a new tab</button>
+                </div>
               </div>
+            </section>
+            <div class="divider" id="divider" role="separator" tabindex="0"
+                 aria-label="Drag to resize, double-tap to swap, tap for options">
+              <div class="divider-pill"></div>
+              <div class="ratio-tip" id="ratio-tip">50 : 50</div>
             </div>
-          </section>
-        </div>
-
-        <!-- Stand-in for "some other app" behind the floating window -->
-        <div class="system-bg" id="system-bg" hidden>
-          <div class="system-bg-bar">
-            <span>Another app running full screen</span>
-            <button class="btn-icon" id="btn-close-system">✕</button>
-          </div>
-          <div class="system-bg-grid">
-            <div class="system-tile"><span>📸</span><span>Camera</span></div>
-            <div class="system-tile"><span>💬</span><span>Messages</span></div>
-            <div class="system-tile"><span>🎮</span><span>Games</span></div>
-            <div class="system-tile"><span>🎵</span><span>Music</span></div>
-            <div class="system-tile"><span>📁</span><span>Files</span></div>
-            <div class="system-tile"><span>⚙️</span><span>Settings</span></div>
-          </div>
-        </div>
-
-        <!-- Floating window -->
-        <div class="floating" id="floating" hidden>
-          <div class="float-header" id="float-header">
-            <div class="float-grip"></div>
-            <div class="float-title" id="float-title">Floating window</div>
-            <div class="float-actions">
-              <button class="btn-icon" id="float-opacity" title="Cycle opacity">◑</button>
-              <button class="btn-icon" id="float-minimize" title="Minimise to a bubble">–</button>
-              <button class="btn-icon" id="float-close" title="Close">✕</button>
+            <div class="secondary-group" id="secondary-group">
+              <section class="pane" id="pane-2" aria-label="Pane 2">
+                <div class="pane-bar">
+                  <button class="pane-badge" data-focus="2">PANE 2</button>
+                  <button class="btn-icon" data-nav="back" data-pane="2" title="Back">‹</button>
+                  <button class="btn-icon" data-nav="forward" data-pane="2" title="Forward">›</button>
+                  <button class="btn-icon" data-nav="reload" data-pane="2" title="Reload">↻</button>
+                  <input class="url-field" id="url-2" type="text" spellcheck="false"
+                         placeholder="Search or type a web address" aria-label="Pane 2 address">
+                  <button class="ua-toggle" id="ua-2" title="Switch between the mobile and desktop site">Mobile</button>
+                  <button class="btn-icon" data-menu="2" title="Pane options">⋮</button>
+                </div>
+                <div class="pane-progress" id="progress-2"></div>
+                <div class="viewport">
+                  <iframe id="frame-2" title="Pane 2 content"
+                          allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"></iframe>
+                  <div class="embed-block" id="block-2">
+                    <div class="eb-icon">🔒</div>
+                    <h4 id="block-title-2">This site blocks embedding</h4>
+                    <p id="block-text-2"></p>
+                    <button class="btn" data-open-tab="2">Open in a new tab</button>
+                  </div>
+                </div>
+              </section>
+              <div class="divider" id="divider-2" role="separator" tabindex="0"
+                   aria-label="Drag to resize the stacked panes">
+                <div class="divider-pill"></div>
+                <div class="ratio-tip" id="ratio-tip-2">50 : 50</div>
+              </div>
+              <section class="pane" id="pane-3" aria-label="Pane 3">
+                <div class="pane-bar">
+                  <button class="pane-badge" data-focus="3">PANE 3</button>
+                  <button class="btn-icon" data-nav="back" data-pane="3" title="Back">‹</button>
+                  <button class="btn-icon" data-nav="forward" data-pane="3" title="Forward">›</button>
+                  <button class="btn-icon" data-nav="reload" data-pane="3" title="Reload">↻</button>
+                  <input class="url-field" id="url-3" type="text" spellcheck="false"
+                         placeholder="Search or type a web address" aria-label="Pane 3 address">
+                  <button class="ua-toggle" id="ua-3" title="Switch between the mobile and desktop site">Mobile</button>
+                  <button class="btn-icon" data-menu="3" title="Pane options">⋮</button>
+                </div>
+                <div class="pane-progress" id="progress-3"></div>
+                <div class="viewport">
+                  <iframe id="frame-3" title="Pane 3 content"
+                          allow="autoplay; clipboard-write; encrypted-media; picture-in-picture"></iframe>
+                  <div class="embed-block" id="block-3">
+                    <div class="eb-icon">🔒</div>
+                    <h4 id="block-title-3">This site blocks embedding</h4>
+                    <p id="block-text-3"></p>
+                    <button class="btn" data-open-tab="3">Open in a new tab</button>
+                  </div>
+                </div>
+              </section>
             </div>
-          </div>
-          <div class="float-nav">
-            <button class="btn-icon" id="float-back" title="Back">‹</button>
-            <button class="btn-icon" id="float-reload" title="Reload">↻</button>
-            <input class="url-field" id="float-url" type="text" spellcheck="false"
-                   placeholder="Search or type a web address" aria-label="Floating window address">
-            <button class="btn btn-primary" id="float-go">Go</button>
-          </div>
-          <div class="float-body">
-            <iframe id="float-frame" title="Floating window content"></iframe>
-          </div>
-          <div class="float-resize" id="float-resize" title="Drag to resize"></div>
         </div>
 
       </div>

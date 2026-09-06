@@ -147,18 +147,33 @@
             </HorizontalScrollView>
 
             <Button
-                android:id="@+id/btn_floating_overlay"
-                style="@style/SplitPad.ToolButton.Accent"
+                android:id="@+id/btn_layout_two"
+                style="@style/SplitPad.ToolButton"
                 android:layout_width="wrap_content"
                 android:layout_height="34dp"
                 android:layout_marginStart="6dp"
-                android:drawableStart="@drawable/ic_float"
+                android:drawableStart="@drawable/ic_grid_split"
                 android:drawablePadding="4dp"
-                android:drawableTint="@color/text_on_accent"
-                android:text="@string/action_floating" />
+                android:drawableTint="@color/text_secondary"
+                android:text="@string/layout_two" />
+
+            <Button
+                android:id="@+id/btn_layout_three"
+                style="@style/SplitPad.ToolButton"
+                android:layout_width="wrap_content"
+                android:layout_height="34dp"
+                android:layout_marginStart="4dp"
+                android:drawableStart="@drawable/ic_grid_three"
+                android:drawablePadding="4dp"
+                android:drawableTint="@color/text_secondary"
+                android:text="@string/layout_three" />
         </LinearLayout>
 
-        <!-- ========================= SPLIT CONTAINER ========================= -->
+        <!-- ========================= SPLIT CONTAINER =========================
+             pane 1 | secondary group (pane 2 [ | pane 3 ])
+             The secondary group runs along the opposite axis to the primary
+             split, so three panes read as "one half, plus two stacked".
+        -->
         <LinearLayout
             android:id="@+id/split_container"
             android:layout_width="match_parent"
@@ -168,7 +183,6 @@
             android:baselineAligned="false"
             android:orientation="vertical">
 
-            <!-- PANE 1 -->
             <LinearLayout
                 android:id="@+id/pane1_container"
                 android:layout_width="match_parent"
@@ -277,7 +291,6 @@
                 </FrameLayout>
             </LinearLayout>
 
-            <!-- DRAGGABLE DIVIDER -->
             <FrameLayout
                 android:id="@+id/divider_handle"
                 android:layout_width="match_parent"
@@ -295,7 +308,6 @@
                     android:background="@drawable/bg_divider_track" />
 
                 <View
-                    android:id="@+id/divider_grip"
                     android:layout_width="52dp"
                     android:layout_height="6dp"
                     android:layout_gravity="center"
@@ -318,113 +330,269 @@
                     android:visibility="gone" />
             </FrameLayout>
 
-            <!-- PANE 2 -->
             <LinearLayout
-                android:id="@+id/pane2_container"
+                android:id="@+id/secondary_group"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="0.5"
-                android:background="@drawable/bg_pane_focus"
-                android:orientation="vertical">
+                android:baselineAligned="false"
+                android:orientation="horizontal">
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="46dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="6dp">
-
-                    <TextView
-                        android:id="@+id/tv_pane2_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_badge"
-                        android:paddingStart="8dp"
-                        android:paddingTop="2dp"
-                        android:paddingEnd="8dp"
-                        android:paddingBottom="2dp"
-                        android:text="@string/pane_2"
-                        android:textColor="@color/accent"
-                        android:textSize="10sp"
-                        android:textStyle="bold" />
-
-                    <ImageButton
-                        android:id="@+id/btn_pane2_back"
-                        style="@style/SplitPad.IconButton"
-                        android:layout_marginStart="4dp"
-                        android:contentDescription="@string/action_back"
-                        android:src="@drawable/ic_back" />
-
-                    <ImageButton
-                        android:id="@+id/btn_pane2_forward"
-                        style="@style/SplitPad.IconButton"
-                        android:contentDescription="@string/action_forward"
-                        android:src="@drawable/ic_forward" />
-
-                    <ImageButton
-                        android:id="@+id/btn_pane2_reload"
-                        style="@style/SplitPad.IconButton"
-                        android:contentDescription="@string/action_reload"
-                        android:src="@drawable/ic_reload" />
-
-                    <EditText
-                        android:id="@+id/et_pane2_url"
-                        android:layout_width="0dp"
-                        android:layout_height="34dp"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginEnd="4dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/bg_glass_input"
-                        android:hint="@string/pane_2_hint"
-                        android:imeOptions="actionGo|flagNoExtractUi"
-                        android:importantForAutofill="no"
-                        android:inputType="textUri"
-                        android:maxLines="1"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="12dp"
-                        android:singleLine="true"
-                        android:textColor="@color/text_primary"
-                        android:textColorHint="@color/text_tertiary"
-                        android:textSize="12sp" />
-
-                    <Button
-                        android:id="@+id/btn_pane2_ua"
-                        style="@style/SplitPad.ToolButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
-                        android:text="@string/mobile_mode"
-                        android:textSize="10sp" />
-
-                    <ImageButton
-                        android:id="@+id/btn_pane2_more"
-                        style="@style/SplitPad.IconButton"
-                        android:contentDescription="@string/action_more"
-                        android:src="@drawable/ic_more_vert" />
-                </LinearLayout>
-
-                <ProgressBar
-                    android:id="@+id/pb_pane2"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="3dp"
-                    android:max="100"
-                    android:progressDrawable="@drawable/progress_pane"
-                    android:visibility="invisible" />
-
-                <FrameLayout
-                    android:id="@+id/pane2_web_holder"
+                    android:id="@+id/pane2_container"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1">
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_pane_focus"
+                    android:orientation="vertical">
 
-                    <WebView
-                        android:id="@+id/webview_pane2"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="46dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="6dp">
+
+                        <TextView
+                            android:id="@+id/tv_pane2_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_badge"
+                            android:paddingStart="8dp"
+                            android:paddingTop="2dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="2dp"
+                            android:text="@string/pane_2"
+                            android:textColor="@color/accent"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                        <ImageButton
+                            android:id="@+id/btn_pane2_back"
+                            style="@style/SplitPad.IconButton"
+                            android:layout_marginStart="4dp"
+                            android:contentDescription="@string/action_back"
+                            android:src="@drawable/ic_back" />
+
+                        <ImageButton
+                            android:id="@+id/btn_pane2_forward"
+                            style="@style/SplitPad.IconButton"
+                            android:contentDescription="@string/action_forward"
+                            android:src="@drawable/ic_forward" />
+
+                        <ImageButton
+                            android:id="@+id/btn_pane2_reload"
+                            style="@style/SplitPad.IconButton"
+                            android:contentDescription="@string/action_reload"
+                            android:src="@drawable/ic_reload" />
+
+                        <EditText
+                            android:id="@+id/et_pane2_url"
+                            android:layout_width="0dp"
+                            android:layout_height="34dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_glass_input"
+                            android:hint="@string/pane_2_hint"
+                            android:imeOptions="actionGo|flagNoExtractUi"
+                            android:importantForAutofill="no"
+                            android:inputType="textUri"
+                            android:maxLines="1"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
+                            android:singleLine="true"
+                            android:textColor="@color/text_primary"
+                            android:textColorHint="@color/text_tertiary"
+                            android:textSize="12sp" />
+
+                        <Button
+                            android:id="@+id/btn_pane2_ua"
+                            style="@style/SplitPad.ToolButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="@string/mobile_mode"
+                            android:textSize="10sp" />
+
+                        <ImageButton
+                            android:id="@+id/btn_pane2_more"
+                            style="@style/SplitPad.IconButton"
+                            android:contentDescription="@string/action_more"
+                            android:src="@drawable/ic_more_vert" />
+                    </LinearLayout>
+
+                    <ProgressBar
+                        android:id="@+id/pb_pane2"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="3dp"
+                        android:max="100"
+                        android:progressDrawable="@drawable/progress_pane"
+                        android:visibility="invisible" />
+
+                    <FrameLayout
+                        android:id="@+id/pane2_web_holder"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1">
+
+                        <WebView
+                            android:id="@+id/webview_pane2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+                    </FrameLayout>
+                </LinearLayout>
+
+                <FrameLayout
+                    android:id="@+id/divider_handle_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="22dp"
+                    android:contentDescription="@string/divider_hint"
+                    android:focusable="true"
+                    android:paddingStart="4dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="4dp"
+                    android:paddingBottom="4dp">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_divider_track" />
+
+                    <View
+                        android:layout_width="52dp"
+                        android:layout_height="6dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_divider_grip" />
+
+                    <TextView
+                        android:id="@+id/tv_ratio_tooltip_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_toast_hint"
+                        android:paddingStart="10dp"
+                        android:paddingTop="3dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="3dp"
+                        android:text="50 : 50"
+                        android:textColor="@color/text_primary"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
                 </FrameLayout>
+
+                <LinearLayout
+                    android:id="@+id/pane3_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_pane_focus"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="46dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="6dp">
+
+                        <TextView
+                            android:id="@+id/tv_pane3_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_badge"
+                            android:paddingStart="8dp"
+                            android:paddingTop="2dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="2dp"
+                            android:text="@string/pane_3"
+                            android:textColor="@color/accent"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                        <ImageButton
+                            android:id="@+id/btn_pane3_back"
+                            style="@style/SplitPad.IconButton"
+                            android:layout_marginStart="4dp"
+                            android:contentDescription="@string/action_back"
+                            android:src="@drawable/ic_back" />
+
+                        <ImageButton
+                            android:id="@+id/btn_pane3_forward"
+                            style="@style/SplitPad.IconButton"
+                            android:contentDescription="@string/action_forward"
+                            android:src="@drawable/ic_forward" />
+
+                        <ImageButton
+                            android:id="@+id/btn_pane3_reload"
+                            style="@style/SplitPad.IconButton"
+                            android:contentDescription="@string/action_reload"
+                            android:src="@drawable/ic_reload" />
+
+                        <EditText
+                            android:id="@+id/et_pane3_url"
+                            android:layout_width="0dp"
+                            android:layout_height="34dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_glass_input"
+                            android:hint="@string/pane_3_hint"
+                            android:imeOptions="actionGo|flagNoExtractUi"
+                            android:importantForAutofill="no"
+                            android:inputType="textUri"
+                            android:maxLines="1"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
+                            android:singleLine="true"
+                            android:textColor="@color/text_primary"
+                            android:textColorHint="@color/text_tertiary"
+                            android:textSize="12sp" />
+
+                        <Button
+                            android:id="@+id/btn_pane3_ua"
+                            style="@style/SplitPad.ToolButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:paddingStart="8dp"
+                            android:paddingEnd="8dp"
+                            android:text="@string/mobile_mode"
+                            android:textSize="10sp" />
+
+                        <ImageButton
+                            android:id="@+id/btn_pane3_more"
+                            style="@style/SplitPad.IconButton"
+                            android:contentDescription="@string/action_more"
+                            android:src="@drawable/ic_more_vert" />
+                    </LinearLayout>
+
+                    <ProgressBar
+                        android:id="@+id/pb_pane3"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="3dp"
+                        android:max="100"
+                        android:progressDrawable="@drawable/progress_pane"
+                        android:visibility="invisible" />
+
+                    <FrameLayout
+                        android:id="@+id/pane3_web_holder"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1">
+
+                        <WebView
+                            android:id="@+id/webview_pane3"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+                    </FrameLayout>
+                </LinearLayout>
+
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -555,55 +723,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:text="@string/mode_native_desc" />
-                </LinearLayout>
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:contentDescription="@null"
-                    android:src="@drawable/ic_chevron_right"
-                    app:tint="@color/text_tertiary" />
-            </LinearLayout>
-
-            <!-- Mode 3 -->
-            <LinearLayout
-                android:id="@+id/btn_mode_floating"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:background="@drawable/bg_mode_card"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="18dp">
-
-                <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_marginEnd="16dp"
-                    android:contentDescription="@null"
-                    android:src="@drawable/ic_float"
-                    app:tint="@color/accent" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        style="@style/SplitPad.Text.Title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/mode_floating_title" />
-
-                    <TextView
-                        style="@style/SplitPad.Text.Body"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="@string/mode_floating_desc" />
                 </LinearLayout>
 
                 <ImageView

@@ -1,7 +1,6 @@
 package com.splitview.pad
 
 import android.app.Activity
-import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -12,13 +11,17 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 /**
- * Two-step picker: choose what goes in pane 1, then what goes in pane 2.
- * Installed apps show their real icon; web apps show a globe.
+ * Two-step picker: choose what goes in the first pane, then the second.
+ *
+ * The dialog opens immediately against the curated web apps and fills in the
+ * installed ones as soon as the background scan lands, rather than blocking on
+ * a full package query the way it used to.
  */
 class AppPickerDialog(
     private val activity: Activity,
@@ -27,7 +30,8 @@ class AppPickerDialog(
 
     private var stage = 1
     private var first: AppEntry? = null
-    private val all: List<AppEntry> by lazy { AppCatalog.build(activity) }
+
+    private var all: List<AppEntry> = AppCatalog.webApps
     private val visible = mutableListOf<AppEntry>()
 
     private lateinit var badge: TextView
@@ -49,6 +53,7 @@ class AppPickerDialog(
 
         val list: RecyclerView = view.findViewById(R.id.rv_installed_apps)
         list.layoutManager = LinearLayoutManager(activity)
+        list.setHasFixedSize(true)
         list.adapter = adapter
 
         val dialog = MaterialAlertDialogBuilder(activity)
@@ -56,7 +61,7 @@ class AppPickerDialog(
             .setNegativeButton(R.string.cancel, null)
             .create()
 
-        adapter.onClick = { entry ->
+        fun choose(entry: AppEntry) {
             if (stage == 1) {
                 first = entry
                 goToStage2()
@@ -67,29 +72,30 @@ class AppPickerDialog(
             }
         }
 
+        adapter.onClick = ::choose
         backButton.setOnClickListener { goToStage1() }
-
         view.findViewById<Button>(R.id.btn_add_custom_url).setOnClickListener {
-            promptCustomUrl { entry ->
-                if (stage == 1) {
-                    first = entry
-                    goToStage2()
-                } else {
-                    val a = first
-                    dialog.dismiss()
-                    if (a != null) onPairChosen(a, entry)
-                }
-            }
+            promptCustomUrl(::choose)
         }
 
         search.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) = Unit
-            override fun onTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) = filter(s?.toString().orEmpty())
+            override fun onTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) =
+                filter(s?.toString().orEmpty())
+
             override fun afterTextChanged(s: Editable?) = Unit
         })
 
         goToStage1()
         dialog.show()
+
+        // Installed apps arrive without the dialog ever having waited on them.
+        AppCatalog.request(activity) { entries ->
+            if (dialog.isShowing) {
+                all = entries
+                filter(search.text.toString())
+            }
+        }
     }
 
     private fun goToStage1() {
@@ -154,10 +160,16 @@ class AppPickerDialog(
             val label: TextView = item.findViewById(R.id.tv_app_label)
             val subtitle: TextView = item.findViewById(R.id.tv_app_subtitle)
             val tagView: TextView = item.findViewById(R.id.tv_app_tag)
+
+            /** Guards against a recycled row showing the previous app's icon. */
+            var boundPackage: String? = null
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder =
-            Holder(LayoutInflater.from(parent.context).inflate(R.layout.item_app_entry, parent, false))
+            Holder(
+                LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_app_entry, parent, false)
+            )
 
         override fun getItemCount(): Int = visible.size
 
@@ -165,17 +177,21 @@ class AppPickerDialog(
             val entry = visible[position]
             holder.label.text = entry.label
             holder.subtitle.text = UrlUtils.prettify(entry.url)
-            if (entry.icon != null) {
-                holder.icon.setImageDrawable(entry.icon)
-            } else {
-                holder.icon.setImageResource(R.drawable.ic_globe)
-                holder.icon.setColorFilter(colorOf(holder.icon.context, R.color.accent))
-            }
             holder.tagView.setText(if (entry.isInstalledApp) R.string.tag_app else R.string.tag_web)
             holder.itemView.setOnClickListener { onClick(entry) }
-        }
 
-        private fun colorOf(context: Context, resId: Int): Int =
-            androidx.core.content.ContextCompat.getColor(context, resId)
+            holder.boundPackage = entry.packageName
+            val fallback = ContextCompat.getColor(holder.icon.context, R.color.accent)
+            holder.icon.setImageResource(R.drawable.ic_globe)
+            holder.icon.setColorFilter(fallback)
+
+            val pkg = entry.packageName ?: return
+            AppCatalog.loadIcon(activity, pkg) { drawable ->
+                if (drawable != null && holder.boundPackage == pkg) {
+                    holder.icon.clearColorFilter()
+                    holder.icon.setImageDrawable(drawable)
+                }
+            }
+        }
     }
 }
