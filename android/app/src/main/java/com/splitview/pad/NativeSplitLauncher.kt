@@ -17,8 +17,19 @@ object NativeSplitLauncher {
 
     enum class Result { LAUNCHED_ADJACENT, LAUNCHED_SEQUENTIALLY, FAILED }
 
-    fun canLaunchAdjacent(activity: Activity): Boolean =
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+    fun canLaunchAdjacent(activity: Activity): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) return false
+
+        val manufacturer = Build.MANUFACTURER
+        val brand = Build.BRAND
+        val unsupportedOems = listOf("xiaomi", "poco", "redmi", "blackshark")
+
+        val isUnsupported = unsupportedOems.any {
+            manufacturer.contains(it, ignoreCase = true) || brand.contains(it, ignoreCase = true)
+        }
+
+        return !isUnsupported
+    }
 
     fun launchPair(activity: Activity, first: String, second: String): Result {
         // 1. Launch App 1 as primary task
