@@ -630,8 +630,10 @@ class MainActivity : AppCompatActivity() {
     private fun launchChosenPair(first: AppEntry, second: AppEntry) {
         val bothInstalled = first.isInstalledApp && second.isInstalledApp
         when {
-            bothInstalled && NativeSplitLauncher.canLaunchAdjacent(this) ->
+            bothInstalled && NativeSplitLauncher.canLaunchAdjacent(this) -> {
+                showHint(getString(R.string.split_launch_hint))
                 NativeSplitLauncher.launchPair(this, first.packageName!!, second.packageName!!)
+            }
 
             bothInstalled -> confirmSystemSplit(first, second)
 

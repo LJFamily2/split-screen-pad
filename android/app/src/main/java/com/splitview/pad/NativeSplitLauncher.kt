@@ -7,44 +7,41 @@ import android.os.Handler
 import android.os.Looper
 
 /**
- * Launching two *installed* apps side by side.
- *
- * Android only honours [Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT] when the caller is
- * already in split-screen mode — there is no public API to force a device out of
- * full screen into a split. So rather than pretending, we do the part that works
- * and say plainly what the user has to do for the rest.
+ * Launching two *installed* native apps side by side using system multi-window flags.
  */
 object NativeSplitLauncher {
 
     enum class Result { LAUNCHED_ADJACENT, LAUNCHED_SEQUENTIALLY, FAILED }
 
     fun canLaunchAdjacent(activity: Activity): Boolean =
-        Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && activity.isInMultiWindowMode
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
 
     fun launchPair(activity: Activity, first: String, second: String): Result {
-        if (!launch(activity, first, adjacent = false)) return Result.FAILED
+        if (!launch(activity, first)) return Result.FAILED
 
-        val adjacent = canLaunchAdjacent(activity)
         Handler(Looper.getMainLooper()).postDelayed({
-            launch(activity, second, adjacent = adjacent)
+            launch(activity, second)
         }, LAUNCH_GAP_MS)
 
-        return if (adjacent) Result.LAUNCHED_ADJACENT else Result.LAUNCHED_SEQUENTIALLY
+        return Result.LAUNCHED_ADJACENT
     }
 
     fun launchSingle(activity: Activity, packageName: String): Boolean =
-        launch(activity, packageName, adjacent = canLaunchAdjacent(activity))
+        launch(activity, packageName)
 
-    private fun launch(activity: Activity, packageName: String, adjacent: Boolean): Boolean {
+    private fun launch(activity: Activity, packageName: String): Boolean {
         val intent = activity.packageManager.getLaunchIntentForPackage(packageName) ?: return false
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        if (adjacent) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             intent.addFlags(
-                Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT or Intent.FLAG_ACTIVITY_MULTIPLE_TASK
+                Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT or
+                Intent.FLAG_ACTIVITY_NEW_TASK or
+                Intent.FLAG_ACTIVITY_MULTIPLE_TASK
             )
+        } else {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         return runCatching { activity.startActivity(intent) }.isSuccess
     }
 
-    private const val LAUNCH_GAP_MS = 600L
+    private const val LAUNCH_GAP_MS = 800L
 }
